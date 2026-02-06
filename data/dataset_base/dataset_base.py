@@ -26,8 +26,19 @@ class DatasetBase:
         """Return test data. Override in subclass."""
         raise NotImplementedError("Subclass must implement get_test_data()")
 
+    def get_image_paths(self) -> Any:
+        """Return image paths. Override in subclass."""
+        return self.image_paths
 
-class EmbeddingDataset(DatasetBase):
+    def get_captions(self) -> Any:
+        """Return text. Override in subclass."""
+        return self.captions
+
+    def get_labels(self) -> Any:
+        """Return labels. Override in subclass."""
+        return self.labels_descriptions
+
+class EmbeddingDataset:
     """Dataset class to hold pre-computed embeddings.
     
     Inherits from DatasetBase to provide a unified interface.
@@ -42,7 +53,6 @@ class EmbeddingDataset(DatasetBase):
             seed: int = 42,
             split: str = "large"
             ):
-        super().__init__()
 
         self.img_encoder = img_encoder
         self.text_encoder = text_encoder

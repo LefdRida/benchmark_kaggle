@@ -43,23 +43,23 @@ class Flickr30k(DatasetBase):
 
 
 class Flickr30kRetrievalDataset(Flickr30k, EmbeddingDataset):
-    def __init__(self, config: DictConfig):
-        Flickr30k.__init__(self, dataset_path=config.dataset.dataset_path)
+    def __init__(self, task_config: DictConfig):
+        Flickr30k.__init__(self, dataset_path=task_config.dataset_path)
         
         self.image_paths = self.flickr.select("image_path").to_list()
-        if config.dataset.generate_embedding:
+        if task_config.generate_embedding:
             self.captions = self.flickr.select("caption").explode().to_numpy()
         else:
             EmbeddingDataset.__init__(
                 self,
-                img_encoder=config.dataset.img_encoder,
-                text_encoder=config.dataset.text_encoder,
-                hf_img_embedding_name=config.dataset.hf_img_embedding_name,
-                hf_text_embedding_name=config.dataset.hf_text_embedding_name,
-                hf_repo_id=config.dataset.hf_repo_id,
-                train_test_ratio=config.dataset.train_test_ratio,
-                seed=config.dataset.seed,
-                split=config.dataset.split
+                img_encoder=task_config.img_encoder,
+                text_encoder=task_config.text_encoder,
+                hf_img_embedding_name=task_config.hf_img_embedding_name,
+                hf_text_embedding_name=task_config.hf_text_embedding_name,
+                hf_repo_id=task_config.hf_repo_id,
+                train_test_ratio=task_config.train_test_ratio,
+                seed=task_config.seed,
+                split=task_config.split
             )
             self.captions = self.flickr.select("caption").to_list()
             self.num_caption_per_image = 5

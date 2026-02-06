@@ -18,7 +18,7 @@ def test_framework():
     # 2. Create Tasks
     tasks = []
     for task in config.tasks:
-        tasks.append(load_dataset_task(task, config))
+        tasks.append(load_dataset_task(task, config[task.lower()]))
     support_embeddings = None
     # 3. Create Benchmark
     benchmark = MMA_Benchmark(tasks=tasks)

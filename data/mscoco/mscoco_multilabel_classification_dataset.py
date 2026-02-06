@@ -92,13 +92,13 @@ class MScoco(DatasetBase):
 
                
 class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
-    def __init__(self, config: DictConfig):
+    def __init__(self, task_config: DictConfig):
         MScoco.__init__(
             self, 
-            data_path=config.dataset.data_path
+            data_path=task_config.data_path
             )
         
-        if config.dataset.generate_embedding:
+        if task_config.generate_embedding:
             self.image_paths = self.instance_table.select("image_path").to_list()
             self.labels_descriptions = (
                 self.instance_table
@@ -113,14 +113,14 @@ class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
         else: 
             EmbeddingDataset.__init__(
                 self,
-                img_encoder=config.dataset.img_encoder,
-                text_encoder=config.dataset.text_encoder,
-                hf_img_embedding_name=config.dataset.hf_img_embedding_name,
-                hf_text_embedding_name=config.dataset.hf_text_embedding_name,
-                hf_repo_id=config.dataset.hf_repo_id,
-                train_test_ratio=config.dataset.train_test_ratio,
-                seed=config.dataset.seed,
-                split=config.dataset.split
+                img_encoder=task_config.img_encoder,
+                text_encoder=task_config.text_encoder,
+                hf_img_embedding_name=task_config.hf_img_embedding_name,
+                hf_text_embedding_name=task_config.hf_text_embedding_name,
+                hf_repo_id=task_config.hf_repo_id,
+                train_test_ratio=task_config.train_test_ratio,
+                seed=task_config.seed,
+                split=task_config.split  
             )
             self.labels_emb = None
             self.labels = self.instance_table.select("label").to_list()
@@ -195,25 +195,25 @@ class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
 
 
 class MScocoRetrievalDataset(MScoco, EmbeddingDataset):
-    def __init__(self, config: DictConfig):
+    def __init__(self, task_config: DictConfig):
         MScoco.__init__(
             self, 
-            data_path=config.dataset.data_path
+            data_path=task_config.data_path
             )
-        if config.dataset.generate_embedding:
+        if task_config.generate_embedding:
             self.captions = self.caption_table.select("captions").explode("captions").to_list()
             self.image_paths = self.caption_table.select("image_path").to_list()
         else:
             EmbeddingDataset.__init__(
                 self,
-                img_encoder=config.dataset.img_encoder,
-                text_encoder=config.dataset.text_encoder,
-                hf_img_embedding_name=config.dataset.hf_img_embedding_name,
-                hf_text_embedding_name=config.dataset.hf_text_embedding_name,
-                hf_repo_id=config.dataset.hf_repo_id,
-                train_test_ratio=config.dataset.train_test_ratio,
-                seed=config.dataset.seed,
-                split=config.dataset.split
+                img_encoder=task_config.img_encoder,
+                text_encoder=task_config.text_encoder,
+                hf_img_embedding_name=task_config.hf_img_embedding_name,
+                hf_text_embedding_name=task_config.hf_text_embedding_name,
+                hf_repo_id=task_config.hf_repo_id,
+                train_test_ratio=task_config.train_test_ratio,
+                seed=task_config.seed,
+                split=task_config.split
             )
             self.image_paths = self.caption_table.select("image_path").to_list()
             self.captions = self.caption_table.select("captions").to_list()

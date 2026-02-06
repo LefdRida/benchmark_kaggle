@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 # Registry dictionary mapping names to classes
 _DATASET_REGISTRY: Dict[str, Type[DatasetBase]] = {
     # Classification Datasets
-    "imagenet-1k-classification": Imagenet1kZeroshotClassificationDataset,
+    "imagenet1k-classification": Imagenet1kZeroshotClassificationDataset,
     "mscoco-classification": MSCOCOMultiLabelClassificationDataset,
     
     # Retrieval Datasets
@@ -33,7 +33,7 @@ _DATASET_REGISTRY: Dict[str, Type[DatasetBase]] = {
     "mscoco-retrieval": MSCOCORetrievalDataset,
 
     # Embedding Generation Datasets (mapped to same classes, logic inside class handles generation mode)
-    "imagenet-1k-classification-embedding": Imagenet1kZeroshotClassificationDataset,
+    "imagenet1k-classification-embedding": Imagenet1kZeroshotClassificationDataset,
     "flickr30k-retrieval-embedding": Flickr30kRetrievalDataset,
     "mscoco-retrieval-embedding": MSCOCORetrievalDataset,
     "mscoco-classification-embedding": MSCOCOMultiLabelClassificationDataset,

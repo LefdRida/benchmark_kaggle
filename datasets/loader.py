@@ -105,7 +105,7 @@ def load_dataset_task(dataset_name: str, config: DictConfig) -> AbsTask:
     """
     dataset_name_lower = dataset_name.lower()
     try:
-        DatasetClass = get_dataset_class(dataset_name)
+        DatasetClass = get_dataset_class(f"{dataset_name_lower}-{config.metatask}")
     except ValueError:
         print(f"Dataset {dataset_name} not found. Available: {list(dataset_mapping.values())}")
         exit(1)
@@ -113,14 +113,14 @@ def load_dataset_task(dataset_name: str, config: DictConfig) -> AbsTask:
     ds = DatasetClass(config)
     support_embeddings = _load_embeddings_and_split(ds, ds.split)
     # ImageNet-1K Classification
-    if config.dataset.task == "classification":
-        return _create_classification_task(f"{dataset_name_lower}-{config.dataset.task}", ds)
+    if config.metatask == "classification":
+        return _create_classification_task(f"{dataset_name_lower}-{config.metatask}", ds)
     # Flickr30k Retrieval
-    elif config.dataset.task == "retrieval":
-        return _create_retrieval_task(f"{dataset_name_lower}-{config.dataset.task}", ds, config, support_embeddings)
+    elif config.metatask == "retrieval":
+        return _create_retrieval_task(f"{dataset_name_lower}-{config.metatask}", ds, config, support_embeddings)
     else:
         raise ValueError(
-            f"Task '{config.dataset.task}' not supported. "
+            f"Task '{config.metatask}' not supported. "
             f"Available: classification, retrieval"
         )
 

@@ -1,5 +1,5 @@
 config = {
-    "tasks": ["imagenet-1k", "Flickr-30k"], # dataset_name
+    "tasks": ["imagenet1k", "flickr30k"], # dataset_name
     "csa":{
         "sim_dim": 700,
     },

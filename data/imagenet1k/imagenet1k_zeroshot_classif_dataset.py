@@ -80,29 +80,29 @@ class Imagenet1k(DatasetBase):
         
 
 class Imagenet1kZeroshotClassificationDataset(Imagenet1k, EmbeddingDataset):
-    def __init__(self, config: DictConfig):
+    def __init__(self, task_config: DictConfig):
         Imagenet1k.__init__(
             self, 
-            root=config.dataset.root, 
-            loc_val_solution=config.dataset.loc_val_solution, 
-            loc_synset_mapping=config.dataset.loc_synset_mapping
+            root=task_config.root, 
+            loc_val_solution=task_config.loc_val_solution, 
+            loc_synset_mapping=task_config.loc_synset_mapping
             )
         
         self.image_paths = self.table.select("image_path").to_numpy()
-        if config.dataset.generate_embedding:
+        if task_config.generate_embedding:
             self.labels_descriptions = self.table.select("label_description").unique().to_numpy()
             
         else:
             EmbeddingDataset.__init__(
                 self,
-                img_encoder=config.dataset.img_encoder,
-                text_encoder=config.dataset.text_encoder,
-                hf_img_embedding_name=config.dataset.hf_img_embedding_name,
-                hf_text_embedding_name=config.dataset.hf_text_embedding_name,
-                hf_repo_id=config.dataset.hf_repo_id,
-                train_test_ratio=config.dataset.train_test_ratio,
-                seed=config.dataset.seed,
-                split=config.dataset.split
+                img_encoder=task_config.img_encoder,
+                text_encoder=task_config.text_encoder,
+                hf_img_embedding_name=task_config.hf_img_embedding_name,
+                hf_text_embedding_name=task_config.hf_text_embedding_name,
+                hf_repo_id=task_config.hf_repo_id,
+                train_test_ratio=task_config.train_test_ratio,
+                seed=task_config.seed,
+                split=task_config.split
             )
             self.labels = self.table.select("label_id").to_numpy()
             self.labels_emb = None
