@@ -1,4 +1,4 @@
-from data.dataset_base.dataset_base import EmbeddingDataset, DatasetBase
+from data.dataset_base import EmbeddingDataset, DatasetBase
 import numpy as np
 from typing import List, Dict, Tuple
 from omegaconf import DictConfig

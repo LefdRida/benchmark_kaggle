@@ -125,3 +125,4 @@ class CKAMethod(AbsMethod):
             graph_shuffled = self.graph[:, shuffle]
             row_ind, col_ind = linear_sum_assignment(graph_shuffled, maximize=True)
             return sum(col_ind[shuffle] == row_ind)/len(col_ind)
+ 

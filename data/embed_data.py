@@ -3,8 +3,6 @@ from collections.abc import Callable
 import numpy as np
 from typing import Tuple
 
-
-
 def embed_images(
     image_paths: list,
     image_encoder: callable,
@@ -20,7 +18,6 @@ def embed_images(
     """
     return image_encoder(image_paths, **kwargs)
 
-  
 def embed_text(
     text: list,
     text_encoder: callable,
@@ -34,8 +31,4 @@ def embed_text(
     Returns:
         text_emb: numpy array of text embeddings
     """
-    return text_encoder(text, **kwargs)    
-
-
-
-
+    return text_encoder(text, **kwargs)

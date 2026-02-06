@@ -1,7 +1,7 @@
 from abc import abstractmethod
 import numpy as np
 from typing import Tuple, Any, Dict
-from data.dataset_base.dataset_utils import load_embeddings_from_hf
+from dataset_utils import load_embeddings_from_hf
 
 class DatasetBase:
     """Base class for all datasets."""

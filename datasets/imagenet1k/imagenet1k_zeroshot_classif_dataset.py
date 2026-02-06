@@ -1,5 +1,4 @@
-from data.dataset_base.dataset_base import EmbeddingDataset, DatasetBase
-from data.imagenet1k.imagenet1k_utils import load_imagenet
+from data.dataset_base import EmbeddingDataset, DatasetBase
 import numpy as np
 from typing import List, Dict, Tuple
 from omegaconf import DictConfig

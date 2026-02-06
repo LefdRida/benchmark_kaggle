@@ -2,7 +2,7 @@ from collections import defaultdict
 import json
 from typing import Dict, List, Tuple
 import numpy as np
-from data.dataset_base.dataset_base import DatasetBase, EmbeddingDataset
+from data.dataset_base import DatasetBase, EmbeddingDataset
 import polars as pl
 from omegaconf import DictConfig
 

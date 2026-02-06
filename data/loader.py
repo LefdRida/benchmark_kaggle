@@ -5,7 +5,7 @@ from tasks.retrieval import RetrievalTask
 from omegaconf import DictConfig
 
 # Use registry for plug-and-play dataset loading
-from datasets import get_dataset_class, list_datasets
+from data import get_dataset_class, list_datasets
 
 
 def _load_embeddings_and_split(dataset, split: str):
