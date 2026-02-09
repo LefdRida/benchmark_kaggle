@@ -70,10 +70,6 @@ class EmbeddingDataset:
         self.train_idx = None
         self.val_idx = None
         
-    def load_data(self, *args, **kwargs):
-        """EmbeddingDataset loads via load_two_encoder_data instead."""
-        pass
-
     def load_two_encoder_data(self) -> Tuple[np.ndarray, np.ndarray]:
         """Load embeddings for two modalities from HuggingFace Hub.
 
@@ -90,12 +86,8 @@ class EmbeddingDataset:
         )
         return self.image_embeddings, self.text_embeddings
 
-    def get_train_test_split_index(self) -> Tuple[np.ndarray, np.ndarray]:
-        """Get the index of the training and validation set.
-
-        Returns:
-            Tuple of (train_idx, val_idx)
-        """
+    def set_train_test_split_index(self) -> None:
+        """Get the index of the training and validation set."""
         assert self.image_embeddings is not None and self.text_embeddings is not None, \
             "Please load the data first."
         assert self.split == "large", "Split must be 'large' to create train/test split."
@@ -106,17 +98,17 @@ class EmbeddingDataset:
         np.random.shuffle(arange)
         self.train_idx = arange[:int(n * self.train_test_ratio)]
         self.val_idx = arange[int(n * self.train_test_ratio):]
-        return self.train_idx, self.val_idx
 
 
-    def get_training_paired_embeddings(self) -> None:
-        """Get paired embeddings for training. Override in subclass."""
-        raise NotImplementedError("Subclass must implement get_training_paired_embeddings()")
+    def set_training_paired_embeddings(self) -> None:
+        """Set paired embeddings for training."""
+        raise NotImplementedError("Subclass must implement set_training_paired_embeddings()")
     
-    def get_test_data(self) -> None:
-        """Get test data. Override in subclass."""
+    def get_test_data(self) -> Tuple[np.ndarray, np.ndarray]:
+        """Get test data."""
         raise NotImplementedError("Subclass must implement get_test_data()")
 
-    def get_support_data(self):
+    def get_support_embeddings(self) -> Dict[str, np.ndarray]:
+        """Get support embeddings."""
         assert self.support_embeddings is not None, "Please load the data first."
-        return self.support_embeddings
+        return self.support_embeddings  

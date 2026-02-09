@@ -39,7 +39,6 @@ class CKAMethod(AbsMethod):
         image_embeddings: np.ndarray, 
         text_embeddings: np.ndarray, 
         support_embeddings: Dict[str, np.ndarray], 
-        mode: str = "image", 
         **kwargs
         ) -> np.ndarray:
         """
@@ -105,24 +104,23 @@ class CKAMethod(AbsMethod):
         return top_doc / total
 
     
-        def classify(
-            self, 
-            image_embeddings: np.ndarray, 
-            text_embeddings: np.ndarray, 
-            support_embeddings: Dict[str, np.ndarray], 
-            **kwargs
+    def classify(
+        self, 
+        image_embeddings: np.ndarray, 
+        text_embeddings: np.ndarray, 
+        support_embeddings: Dict[str, np.ndarray], 
+        **kwargs
         )   
-            self.align(
-                image_embeddings, 
-                text_embeddings, 
-                support_embeddings, 
-                mode: str = "image", 
-                **kwargs
-            )
-            torch.manual_seed(0)
-            shuffle = torch.randperm(self.graph.shape[1])
-            
-            graph_shuffled = self.graph[:, shuffle]
-            row_ind, col_ind = linear_sum_assignment(graph_shuffled, maximize=True)
-            return sum(col_ind[shuffle] == row_ind)/len(col_ind)
+        self.align(
+            image_embeddings, 
+            text_embeddings, 
+            support_embeddings, 
+            **kwargs
+        )
+        torch.manual_seed(0)
+        shuffle = torch.randperm(self.graph.shape[1])
+        
+        graph_shuffled = self.graph[:, shuffle]
+        row_ind, col_ind = linear_sum_assignment(graph_shuffled, maximize=True)
+        return sum(col_ind[shuffle] == row_ind)/len(col_ind)
  

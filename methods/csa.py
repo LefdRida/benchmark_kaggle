@@ -13,7 +13,7 @@ class CSAMethod(AbsMethod):
         self.cca = NormalizedCCA(sim_dim=sim_dim)
         self.fitted = False
 
-    def align(self, image_embeddings: np.ndarray, text_embeddings: np.ndarray, support_embeddings: Dict[str, np.ndarray], mode: str = "image", **kwargs) -> np.ndarray:
+    def align(self, image_embeddings: np.ndarray, text_embeddings: np.ndarray, support_embeddings: Dict[str, np.ndarray], **kwargs) -> np.ndarray:
         """
         Align embeddings using CSA.
         """
@@ -65,3 +65,7 @@ class CSAMethod(AbsMethod):
         for ii in range(x.shape[0]):
             sim[ii] = corr * x[ii] @ y[ii]
         return sim
+    
+    def get_similarity_function(self):
+        return self.similarity_function
+        

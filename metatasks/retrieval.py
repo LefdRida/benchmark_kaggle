@@ -14,8 +14,6 @@ class RetrievalTask(AbsTask):
         self.topk = topk
         self.num_gt = num_gt
 
-    def load_data(self, **kwargs):
-        pass
 
     def run(self, method: AbsMethod, support_embeddings: Dict[str, np.ndarray] = None, **kwargs) -> Dict[str, Any]:
         """Run retrieval using the provided alignment method."""
@@ -27,8 +25,11 @@ class RetrievalTask(AbsTask):
         if hasattr(method, 'retrieve'):
             all_hits = method.retrieve(self.queries, self.gt_ids, self.documents, support_embeddings, self.topk, self.num_gt)
         else:
-            aligned_queries = method.align(self.queries, support_embeddings, mode="query")
-            aligned_documents = method.align(self.documents, support_embeddings, mode="document")
+            aligned_queries, aligned_documents = method.align(
+                image_embeddings=self.queries,
+                text_embeddings=self.documents,
+                support_embeddings=support_embeddings
+                )
             
             all_hits = []
             for idx in range(aligned_queries.shape[0]):
@@ -37,7 +38,7 @@ class RetrievalTask(AbsTask):
                 q_emb_expanded = np.repeat(q_emb, aligned_documents.shape[0], axis=0)
             
             if hasattr(method, 'similarity_function'):
-                similarity_function = method.similarity_function
+                similarity_function = method.get_similarity_function()
             else:
                 def similarity_function(x, y):
                     x = x / (np.linalg.norm(x, axis=1, keepdims=True) + 1e-10)

@@ -1,5 +1,6 @@
 config = {
-    "tasks": ["imagenet1k", "flickr30k"], # dataset_name
+    "tasks": ["imagenet1k"], # dataset_name
+    "method_name": "asif",  # Method to use: "asif", "csa", or "cka"
     "csa":{
         "sim_dim": 700,
     },
@@ -12,14 +13,14 @@ config = {
     },
     "support_embeddings": None,
     "imagenet1k": {
-        "root": "",
-        "loc_val_solution": "",
-        "loc_synset_mapping": "",
-        "img_encoder": "", 
-        "text_encoder": "", 
-        "hf_img_embedding_name": "", 
-        "hf_text_embedding_name": "", 
-        "hf_repo_id": "", 
+        "root": "/home/rida.lefdali/work/ImageNet/val",
+        "loc_val_solution": "/home/rida.lefdali/work/ImageNet/LOC_val_solution.txt",
+        "loc_synset_mapping": "/home/rida.lefdali/work/ImageNet/LOC_synset_mapping.txt",
+        "img_encoder": "dinov2-large", 
+        "text_encoder": "gtr-t5-large", 
+        "hf_img_embedding_name": "ImageNet_img_embed_dinov2-large.pkl", 
+        "hf_text_embedding_name": "ImageNet_text_embed_gtr-t5-large.pkl", 
+        "hf_repo_id": "ridalefdali/ImageNet_embeddings", 
         "train_test_ratio": 0.8,
         "seed": 42,
         "split": "large",

@@ -106,7 +106,7 @@ class Imagenet1kZeroshotClassificationDataset(Imagenet1k, EmbeddingDataset):
             self.labels = self.table.select("label_id").to_numpy()
             self.labels_emb = None
             
-    def get_training_paired_embeddings(self) -> Tuple[np.ndarray, np.ndarray]:        
+    def set_training_paired_embeddings(self) -> None:        
 
         """Get the paired embeddings for both modalities."""
         assert self.text_embeddings.shape[0] == len(self.clsidx_to_labels), "To pair embeddings, the text embeddings should contain only all possible labels."
@@ -136,7 +136,7 @@ class Imagenet1kZeroshotClassificationDataset(Imagenet1k, EmbeddingDataset):
         self.support_embeddings["train_image"] = train_image_embeddings
         self.support_embeddings["train_text"] = train_text_embeddings
     
-    def get_labels_emb(self) -> None:
+    def set_labels_emb(self) -> None:
         """Get the text embeddings for all possible labels."""
         if self.text_embeddings.shape[0] == len(self.clsidx_to_labels):
             labels_emb = self.text_embeddings
@@ -150,7 +150,7 @@ class Imagenet1kZeroshotClassificationDataset(Imagenet1k, EmbeddingDataset):
             assert labels_emb.shape[0] == len(self.clsidx_to_labels)
         self.support_embeddings["labels_emb"] = labels_emb
     
-    def get_test_data(self):
+    def get_test_data(self) -> Tuple[np.ndarray, np.ndarray]:
         assert self.image_embeddings is not None and self.text_embeddings is not None, "Please load the data first."
         if self.split == "large":
             assert self.train_idx is not None and self.val_idx is not None, "Please get the train/test split index first."
