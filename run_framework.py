@@ -1,11 +1,11 @@
 import numpy as np
 from benchmark import MMA_Benchmark
-from tasks.classification import ClassificationTask
-from tasks.retrieval import RetrievalTask
+from metatasks.classification import ClassificationTask
+from metatasks.retrieval import RetrievalTask
 from methods.asif import ASIFMethod
 from methods.csa import CSAMethod
 from models.model_wrappers import HFModelWrapper
-from datasets.loader import load_dataset_task
+from data.loader import load_dataset_task
 from config import config
 from omegaconf import OmegaConf
 

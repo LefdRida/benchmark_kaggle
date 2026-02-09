@@ -1,7 +1,7 @@
 from typing import Union, List, Optional
 from base import AbsTask
-from tasks.classification import ClassificationTask
-from tasks.retrieval import RetrievalTask
+from metatasks.classification import ClassificationTask
+from metatasks.retrieval import RetrievalTask
 from omegaconf import DictConfig
 
 # Use registry for plug-and-play dataset loading
@@ -33,7 +33,6 @@ def _load_embeddings_and_split(dataset, split: str):
 def _create_classification_task(
     dataset_name: str,
     dataset,
-    config: DictConfig,
     support_embeddings: Optional[dict]
 ) -> ClassificationTask:
     """Helper function to create a classification task.
@@ -114,7 +113,7 @@ def load_dataset_task(dataset_name: str, config: DictConfig) -> AbsTask:
     support_embeddings = _load_embeddings_and_split(ds, ds.split)
     # ImageNet-1K Classification
     if config.metatask == "classification":
-        return _create_classification_task(f"{dataset_name_lower}-{config.metatask}", ds)
+        return _create_classification_task(f"{dataset_name_lower}-{config.metatask}", ds, support_embeddings)
     # Flickr30k Retrieval
     elif config.metatask == "retrieval":
         return _create_retrieval_task(f"{dataset_name_lower}-{config.metatask}", ds, config, support_embeddings)
