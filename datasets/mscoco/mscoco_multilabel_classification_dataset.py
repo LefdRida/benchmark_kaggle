@@ -113,18 +113,22 @@ class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
         else: 
             EmbeddingDataset.__init__(
                 self,
-                img_encoder=task_config.img_encoder,
-                text_encoder=task_config.text_encoder,
-                hf_img_embedding_name=task_config.hf_img_embedding_name,
-                hf_text_embedding_name=task_config.hf_text_embedding_name,
-                hf_repo_id=task_config.hf_repo_id,
-                train_test_ratio=task_config.train_test_ratio,
-                seed=task_config.seed,
                 split=task_config.split  
             )
             self.labels_emb = None
             self.labels = self.instance_table.select("label").to_list()
-            
+            self.load_two_encoder_data(
+                hf_repo_id=task_config.hf_repo_id, 
+                hf_img_embedding_name=task_config.hf_img_embedding_name, 
+                hf_text_embedding_name=task_config.hf_text_embedding_name
+            )
+            self.set_labels_emb()
+            if task_config.split == "train" or task_config.split == "large":
+                self.set_train_test_split_index(
+                    train_test_ratio=task_config.train_test_ratio, 
+                    seed=task_config.seed
+                )
+                self.set_training_paired_embeddings()
 
     def get_labels_emb(self) -> None:
         """Get the text embeddings for all possible labels."""
@@ -146,12 +150,13 @@ class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
 
     def get_training_paired_embeddings(self) -> Tuple[np.ndarray, np.ndarray]:
         """Get the paired embeddings for both modalities."""
-        assert self.text_embeddings.shape[0] == len(self.clsidx_to_labels), "To pair embeddings, the text embeddings should contain only all possible labels."
         assert self.image_embeddings.shape[0] == len(self.labels), "Each image should have a corresponding list of labels."
         assert self.train_idx is not None or self.split=="train", "Please get the train/test split index first."
+        assert self.support_embeddings.get('labels_emb', None) is not None, "Please get the labels embeddings first."
         
         text_emb = []
         image_emb = []
+        self.labels_emb = self.support_embeddings['labels_emb']
 
         if self.split == "train":
             for idx, label_list in enumerate(self.labels):
@@ -221,6 +226,17 @@ class MScocoRetrievalDataset(MScoco, EmbeddingDataset):
             self.num_image_per_caption = 1
             self.gt_img_doc_ids = [idx for idx in range(len(self.image_paths)) for _ in range(self.num_caption_per_image)]      
             self.gt_caption_doc_ids = list(range(len(self.captions)))
+            self.load_two_encoder_data(
+                hf_repo_id=task_config.hf_repo_id, 
+                hf_img_embedding_name=task_config.hf_img_embedding_name, 
+                hf_text_embedding_name=task_config.hf_text_embedding_name
+            )
+            if task_config.split == "train" or task_config.split == "large":
+                self.set_train_test_split_index(
+                    train_test_ratio=task_config.train_test_ratio, 
+                    seed=task_config.seed
+                )
+                self.set_training_paired_embeddings()
         
     def get_training_paired_embeddings(self) -> Tuple[np.ndarray, np.ndarray]:
         """Get the paired embeddings for both modalities."""

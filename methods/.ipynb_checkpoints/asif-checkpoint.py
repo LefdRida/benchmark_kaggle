@@ -8,7 +8,7 @@ from methods.asif_core import relative_represent, sparsify, normalize_sparse
 class ASIFMethod(AbsMethod):
     """ASIF alignment technique."""
     
-    def __init__(self, non_zeros: int = 800, val_exps: list = [8.0], max_gpu_mem_gb: float = 8.0):
+    def __init__(self, non_zeros: int = 800, val_exps: list = [1.0], max_gpu_mem_gb: float = 8.0):
         super().__init__("ASIF")
         self.non_zeros = non_zeros
         self.val_exps = val_exps
@@ -40,6 +40,7 @@ class ASIFMethod(AbsMethod):
         ]
         range_anch = range_anch[-1:]  # run just last anchor to be quick
         val_labels = torch.zeros((1,), dtype=torch.float32)
+        
         _, _, sim_score_matrix = self.similarity_function(
             torch.tensor(queries, dtype=torch.float32),
             torch.tensor(documents, dtype=torch.float32),
@@ -90,32 +91,28 @@ class ASIFMethod(AbsMethod):
         range_anch = range_anch[-1:]  # run just last anchor to be quick
         val_labels = torch.zeros((1,), dtype=torch.float32)
         # generate noise in the shape of the labels_emb
-        #noise = np.random.rand(
-        #    data.shape[0] - labels_emb.shape[0],
-        #    labels_emb.shape[1],
-        #).astype(np.float32)
-        #test_label = np.concatenate((labels_emb, noise), axis=0)
-        #assert (
-        #    data.shape[0] == test_label.shape[0]
-        #), f"{data.shape[0]}!={test_label.shape[0]}"
-        sim_scores = []
-        for batch in range(0, data.shape[0], labels_emb.shape[0]):
-            
-            _, _, sim_score_matrix = self.similarity_function(
-                torch.tensor(data[batch:batch+labels_emb.shape[0]], dtype=torch.float32),
-                torch.tensor(labels_emb, dtype=torch.float32),
-                torch.tensor(support_embeddings["train_image"], dtype=torch.float32),
-                torch.tensor(support_embeddings["train_text"], dtype=torch.float32),
-                val_labels,
-                non_zeros,
-                range_anch,
-                self.val_exps,
-                max_gpu_mem_gb=self.max_gpu_mem_gb,
-            )
-            sim_score_matrix = sim_score_matrix.numpy().astype(np.float32)#[:, :2]
-            sim_scores.append(sim_score_matrix)
-        sim_scores = np.concatenate(sim_scores, axis=0)
-        predictions = np.argmax(sim_scores.T, axis=0)
+        noise = np.random.rand(
+            data.shape[0] - labels_emb.shape[0],
+            labels_emb.shape[1],
+        ).astype(np.float32)
+        test_label = np.concatenate((labels_emb, noise), axis=0)
+        assert (
+            data.shape[0] == test_label.shape[0]
+        ), f"{data.shape[0]}!={test_label.shape[0]}"
+        _, _, sim_score_matrix = self.similarity_function(
+            torch.tensor(data, dtype=torch.float32),
+            torch.tensor(test_label, dtype=torch.float32),
+            torch.tensor(support_embeddings["train_image"], dtype=torch.float32),
+            torch.tensor(support_embeddings["train_text"], dtype=torch.float32),
+            val_labels,
+            non_zeros,
+            range_anch,
+            self.val_exps,
+            max_gpu_mem_gb=self.max_gpu_mem_gb,
+        )
+        sim_score_matrix = sim_score_matrix.numpy().astype(np.float32)[:, :2]
+        sim_scores = sim_score_matrix.T
+        predictions = np.argmax(sim_scores, axis=0)
         return predictions
     
     def similarity_function(

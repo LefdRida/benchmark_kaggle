@@ -10,10 +10,6 @@ class AbsTask(ABC):
         self.task_type = task_type
         self.dataset = None
 
-    @abstractmethod
-    def load_data(self, **kwargs):
-        """Load the dataset needed for the task."""
-        pass
 
     @abstractmethod
     def run(self, method: 'AbsMethod', model: 'AbsModel', **kwargs) -> Dict[str, Any]:

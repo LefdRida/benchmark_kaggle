@@ -1,5 +1,5 @@
 """This module contains functions to extract features from images, audio, and text using various models."""
-from models_utils import *
+from .models_utils import *
 from transformers import AutoModel, AutoTokenizer
 from sentence_transformers import SentenceTransformer
 from transformers import ViTModel, ViTImageProcessor

@@ -7,9 +7,9 @@ class RetrievalTask(AbsTask):
     
     def __init__(self, name: str, queries: np.ndarray, documents: np.ndarray, gt_ids: np.ndarray, support_embeddings: Dict[str, np.ndarray] = None, topk: int = 5, num_gt: int = 1):
         super().__init__(name, "retrieval")
-        self.queries = np.array(queries)
-        self.documents = np.array(documents)
-        self.gt_ids = np.array(gt_ids)
+        self.queries = queries
+        self.documents = documents
+        self.gt_ids = gt_ids
         self.support_embeddings = support_embeddings
         self.topk = topk
         self.num_gt = num_gt

@@ -28,11 +28,12 @@ class CSAMethod(AbsMethod):
         # Transform based on mode
         # Zero mean using training mean
         
-        #image_embeddings_centred = image_embeddings - self.cca.traindata1_mean
-        #text_embeddings_centred = text_embeddings - self.cca.traindata2_mean
-        
+        image_embeddings_centred = image_embeddings - self.cca.traindata1_mean
+        text_embeddings_centred = text_embeddings - self.cca.traindata2_mean
+        print(image_embeddings_centred.shape)
+        print(text_embeddings_centred.shape)
         # Transform using CCA weights for first modality
-        image_embeddings, text_embeddings = self.cca.transform_data(image_embeddings, text_embeddings)
+        image_embeddings, text_embeddings = self.cca.transform_data(image_embeddings_centred, text_embeddings_centred)
 
         return image_embeddings, text_embeddings
     

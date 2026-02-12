@@ -9,7 +9,11 @@ import polars as pl
 class Flickr30k(DatasetBase):
     def __init__(self, dataset_path: str):
         super().__init__()
+        self.captions = None
         self.num_caption_per_image = None
+        self.num_image_per_caption = None
+        self.gt_caption_doc_ids = None
+        self.gt_img_doc_ids = None
         self.load_data(dataset_path)
         
             
@@ -29,14 +33,14 @@ class Flickr30k(DatasetBase):
         """
         # load Flickr train json filee. columns: [raw, sentids, split, filename, img_id]
         self.flickr = (
-            pl.read_csv(dataset_path+'captions.txt', separator=',')
+            pl.read_csv(Path(dataset_path) / 'captions.txt', separator=',')
             .with_columns(pl.col('caption').str.len_chars().alias('len'))
             .sort('len', descending=True)
             .group_by('image', maintain_order=True)
             .agg(pl.col('caption'))
             .with_columns(
                 pl.col("image").map_elements(
-                    lambda x: str(Path(self.dataset_path) / "Images" / x)
+                    lambda x: str(Path(dataset_path) / "Images" / x), return_dtype=pl.String
                 ).alias("image_path")
             )
         )
@@ -46,27 +50,31 @@ class Flickr30kRetrievalDataset(Flickr30k, EmbeddingDataset):
     def __init__(self, task_config: DictConfig):
         Flickr30k.__init__(self, dataset_path=task_config.dataset_path)
         
-        self.image_paths = self.flickr.select("image_path").to_list()
+        self.image_paths = self.flickr.select("image_path").to_series().to_list()
         if task_config.generate_embedding:
-            self.captions = self.flickr.select("caption").explode().to_numpy()
+            self.captions = self.flickr.select("caption").explode("caption").to_series().to_list()
         else:
             EmbeddingDataset.__init__(
                 self,
-                img_encoder=task_config.img_encoder,
-                text_encoder=task_config.text_encoder,
-                hf_img_embedding_name=task_config.hf_img_embedding_name,
-                hf_text_embedding_name=task_config.hf_text_embedding_name,
-                hf_repo_id=task_config.hf_repo_id,
-                train_test_ratio=task_config.train_test_ratio,
-                seed=task_config.seed,
                 split=task_config.split
             )
-            self.captions = self.flickr.select("caption").to_list()
+            self.captions = self.flickr.select("caption").to_series().to_list()
             self.num_caption_per_image = 5
             self.num_image_per_caption = 1
+            self.load_two_encoder_data(
+                hf_repo_id=task_config.hf_repo_id, 
+                hf_img_embedding_name=task_config.hf_img_embedding_name, 
+                hf_text_embedding_name=task_config.hf_text_embedding_name
+            )
+            if self.split == "train" or self.split == "large":
+                self.set_train_test_split_index(
+                    train_test_ratio=task_config.train_test_ratio, 
+                    seed=task_config.seed
+                )
+                self.get_training_paired_embeddings()
     
 
-    def get_training_paired_embeddings(self) -> Tuple[np.ndarray, np.ndarray]:
+    def get_training_paired_embeddings(self) -> None:
         """Get the paired embeddings for both modalities."""
         assert self.text_embeddings.shape[0] == len(self.captions)*5, "To pair embeddings, the text embeddings should contain only all possible labels."
         assert self.image_embeddings.shape[0] == len(self.captions), "Each image should have a corresponding list of labels."
@@ -74,7 +82,8 @@ class Flickr30kRetrievalDataset(Flickr30k, EmbeddingDataset):
         
         text_emb = []
         image_emb = []
-
+        print(self.text_embeddings.shape)
+        print(self.image_embeddings.shape)
         if self.split == "train":
             for idx, caption_list in enumerate(self.captions):
                 caption_emb = self.text_embeddings[idx*5:(idx+1)*5].reshape(5, -1)
@@ -82,8 +91,8 @@ class Flickr30kRetrievalDataset(Flickr30k, EmbeddingDataset):
                 image_emb.append(
                     np.repeat(self.image_embeddings[idx].reshape(1, -1), 5, axis=0 )
                     )
-            train_image_embeddings = np.array(image_emb)
-            train_text_embeddings = np.array(text_emb)
+            train_image_embeddings = np.concatenate(image_emb, axis=0)
+            train_text_embeddings = np.concatenate(text_emb, axis=0)
 
         elif self.split == "large" and self.train_idx is not None:
             for idx in self.train_idx:
@@ -92,8 +101,8 @@ class Flickr30kRetrievalDataset(Flickr30k, EmbeddingDataset):
                 image_emb.append(
                     np.repeat(self.image_embeddings[idx].reshape(1, -1), 5, axis=0 )
                     )
-            train_image_embeddings = np.array(image_emb)
-            train_text_embeddings = np.array(text_emb)
+            train_image_embeddings = np.concatenate(image_emb, axis=0)
+            train_text_embeddings = np.concatenate(text_emb, axis=0)
         else:
             raise ValueError("Please set split to 'train' or get the train/test split index first.")
         assert train_image_embeddings.shape[0] == train_text_embeddings.shape[0]

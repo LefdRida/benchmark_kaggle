@@ -94,39 +94,33 @@ class Imagenet1kZeroshotClassificationDataset(Imagenet1k, EmbeddingDataset):
         else:
             EmbeddingDataset.__init__(
                 self,
+                img_encoder=task_config.img_encoder,
+                text_encoder=task_config.text_encoder,
+                hf_img_embedding_name=task_config.hf_img_embedding_name,
+                hf_text_embedding_name=task_config.hf_text_embedding_name,
+                hf_repo_id=task_config.hf_repo_id,
+                train_test_ratio=task_config.train_test_ratio,
+                seed=task_config.seed,
                 split=task_config.split
             )
             self.labels = self.table.select("label_id").to_numpy()
+            self.labels_emb = None
             self.metatask = task_config.metatask
-            self.load_two_encoder_data(
-                hf_repo_id=task_config.hf_repo_id, 
-                hf_img_embedding_name=task_config.hf_img_embedding_name, 
-                hf_text_embedding_name=task_config.hf_text_embedding_name
-            )
-            self.set_labels_emb()
-            if task_config.split == "train" or task_config.split == "large":
-                self.set_train_test_split_index(
-                    train_test_ratio=task_config.train_test_ratio, 
-                    seed=task_config.seed
-                )
-                self.set_training_paired_embeddings()
             
     def set_training_paired_embeddings(self) -> None:        
 
         """Get the paired embeddings for both modalities."""
-        #if self.text_embeddings.shape[0] != len(self.clsidx_to_labels):
-        #    self.text_embeddings = np.unique(self.text_embeddings, axis=0)
-        #    print(self.text_embeddings.shape)
+        if self.text_embeddings.shape[0] != len(self.clsidx_to_labels):
+            self.text_embeddings = np.unique(self.text_embeddings, axis=0)
         #, "To pair embeddings, the text embeddings should contain only all possible labels."
         assert self.image_embeddings.shape[0] == len(self.labels), "Each image should have a corresponding list of labels."
         assert self.train_idx is not None or self.split=="train", "Please get the train/test split index first."
-        assert self.support_embeddings.get('labels_emb', None) is not None, "Please get the labels embeddings first."
         
         text_emb = []
-        self.labels_emb = self.support_embeddings['labels_emb']
+
         if self.split == "train":
             for idx, label in enumerate(self.labels):
-                label_emb = self.labels_emb[label].reshape(-1)
+                label_emb = self.text_embeddings[label].reshape(-1)
                 text_emb.append(label_emb)
             train_text_embeddings = np.array(text_emb)
 
@@ -134,7 +128,7 @@ class Imagenet1kZeroshotClassificationDataset(Imagenet1k, EmbeddingDataset):
             train_image_embeddings =  self.image_embeddings[self.train_idx]
             for idx in self.train_idx:
                 label = self.labels[idx]
-                label_emb = self.labels_emb[label].reshape(-1)
+                label_emb = self.text_embeddings[label].reshape(-1)
                 text_emb.append(label_emb)
             train_text_embeddings = np.array(text_emb)
             
@@ -157,7 +151,6 @@ class Imagenet1kZeroshotClassificationDataset(Imagenet1k, EmbeddingDataset):
                 label_emb.append(self.text_embeddings[label_idx_in_ds[0]])
             labels_emb = np.array(label_emb)
             assert labels_emb.shape[0] == len(self.clsidx_to_labels)
-        self.labels_emb = labels_emb
         self.support_embeddings["labels_emb"] = labels_emb
     
     def get_test_data(self) -> Tuple[np.ndarray, np.ndarray]:

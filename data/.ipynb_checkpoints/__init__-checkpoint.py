@@ -27,7 +27,7 @@ _DATASET_REGISTRY: Dict[str, Type[DatasetBase]] = {
     # Classification Datasets
     "imagenet1k-classification": Imagenet1kZeroshotClassificationDataset,
     "mscoco-classification": MScocoMultiLabelClassificationDataset,
-
+    
     # Retrieval Datasets
     "flickr30k-retrieval": Flickr30kRetrievalDataset,
     "mscoco-retrieval": MScocoRetrievalDataset,

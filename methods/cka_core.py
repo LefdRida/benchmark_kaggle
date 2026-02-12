@@ -28,7 +28,11 @@ def rbf(X, sigma=None):
     return KX
 
 def kernel_HSIC(X, Y, device, sigma):
-    return torch.trace(torch.matmul(centering(rbf(X, sigma), device), centering(rbf(Y, sigma), device)))
+    return torch.trace(
+        torch.matmul(
+            centering(rbf(X, sigma), device), centering(rbf(Y, sigma), device)
+            )
+        )
 
 def kernel_CKA(X, Y, device, sigma=None):
     hsic = kernel_HSIC(X, Y, device, sigma)
@@ -40,7 +44,9 @@ def kernel_CKA(X, Y, device, sigma=None):
 def linear_HSIC(X, Y, device):
     L_X = torch.matmul(X, X.T)
     L_Y = torch.matmul(Y, Y.T)
-    return torch.sum(centering(L_X, device) * centering(L_Y, device))
+    return torch.sum(
+        centering(L_X, device) * centering(L_Y, device)
+        )
 
 def linear_CKA(X, Y, device):
     hsic = linear_HSIC(X, Y, device)
