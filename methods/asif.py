@@ -4,15 +4,15 @@ from typing import Dict, Any, Optional
 from base.base import AbsMethod
 # Importing from local module
 from methods.asif_core import relative_represent, sparsify, normalize_sparse
-
+from tqdm import tqdm
 class ASIFMethod(AbsMethod):
     """ASIF alignment technique."""
     
-    def __init__(self, non_zeros: int = 800, val_exps: list = [8.0], max_gpu_mem_gb: float = 8.0):
+    def __init__(self, non_zeros: int = 800, val_exps: list = [8.0], max_gpu_mem_gb: float = 1.0):
         super().__init__("ASIF")
         self.non_zeros = non_zeros
         self.val_exps = val_exps
-        self.max_gpu_mem_gb = max_gpu_mem_gb
+        self.max_gpu_mem_gb = 1.0
 
     def align(self):
         pass
@@ -20,7 +20,7 @@ class ASIFMethod(AbsMethod):
     def retrieve(
         self,
         queries: np.ndarray,
-        gt_document_ids: np.ndarray,
+        gt_ids: np.ndarray,
         documents: np.ndarray,
         support_embeddings: Dict[str, np.ndarray],
         topk: int = 5,
@@ -28,23 +28,28 @@ class ASIFMethod(AbsMethod):
         **kwargs
     ) -> np.ndarray:
         assert topk >= num_gt, "topk should be more than num_gt"
-        assert gt_document_ids.shape[0] == documents.shape[0], "gt_document_ids and documents should have the same number of samples"
-        
+
+        assert len(gt_ids) == len(queries), "gt_ids and documents should have the same number of samples"
         non_zeros = min(self.non_zeros, support_embeddings['train_image'].shape[0])
         range_anch = [
             2**i
             for i in range(
                 int(np.log2(non_zeros) + 1),
-                int(np.log2(len(support_embeddings['train_image']))) + 2,
+                int(np.log2(len(support_embeddings['train_image'][:111240]))) + 2,
             )
         ]
+        print(support_embeddings['train_image'].shape)
+        print(support_embeddings['train_text'].shape)
+        print(queries.shape)
+        print(documents.shape)
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         range_anch = range_anch[-1:]  # run just last anchor to be quick
         val_labels = torch.zeros((1,), dtype=torch.float32)
         _, _, sim_score_matrix = self.similarity_function(
-            torch.tensor(queries, dtype=torch.float32),
-            torch.tensor(documents, dtype=torch.float32),
-            torch.tensor(support_embeddings['train_image'], dtype=torch.float32),
-            torch.tensor(support_embeddings['train_text'], dtype=torch.float32),
+            torch.tensor(queries[:9535], dtype=torch.float32).to(device),
+            torch.tensor(documents[:47675], dtype=torch.float32).to(device),
+            torch.tensor(support_embeddings['train_image'][:111240], dtype=torch.float32).to(device),
+            torch.tensor(support_embeddings['train_text'][:111240], dtype=torch.float32).to(device),
             val_labels,
             non_zeros,
             range_anch,
@@ -56,18 +61,14 @@ class ASIFMethod(AbsMethod):
         
         self.sim_scores = []
         self.all_hit = []
-        for idx in range(0, queries.shape[0]):
-            gt_query_ids = gt_document_ids[idx*num_gt:(idx+1)*num_gt]
-            # copy the test text to the number of images
+        for idx in range(queries[:9535].shape[0]):
+            gt_query_ids = gt_ids[idx]
             sim_score = sim_score_matrix[idx, :]
-
-            # sort the similarity score in descending order and get the index
-            sim_top_idx = np.argpartition(sim_score, -num_gt)[-num_gt :]
+            sim_top_idx = np.argpartition(sim_score, -topk)[-topk :]
             sim_top_idx = sim_top_idx[np.argsort(sim_score[sim_top_idx])[::-1]]
-            hit = np.zeros((topk, num_gt))
-            for jj in range(num_gt):
-                for ii in range(topk):
-                    hit[ii, jj] = 1 if gt_query_ids[jj] == gt_document_ids[sim_top_idx[ii]] else 0
+            hit = np.zeros(topk)
+            for jj, top_idx in enumerate(sim_top_idx):
+                hit[jj] = 1 if top_idx in gt_query_ids else 0        
             self.all_hit.append(hit)
             self.sim_scores.append(sim_score)
         return self.all_hit
@@ -90,29 +91,30 @@ class ASIFMethod(AbsMethod):
         range_anch = range_anch[-1:]  # run just last anchor to be quick
         val_labels = torch.zeros((1,), dtype=torch.float32)
         # generate noise in the shape of the labels_emb
-        #noise = np.random.rand(
-        #    data.shape[0] - labels_emb.shape[0],
-        #    labels_emb.shape[1],
-        #).astype(np.float32)
-        #test_label = np.concatenate((labels_emb, noise), axis=0)
-        #assert (
-        #    data.shape[0] == test_label.shape[0]
-        #), f"{data.shape[0]}!={test_label.shape[0]}"
+        # noise = np.random.rand(
+        #     data.shape[0] - labels_emb.shape[0],
+        #     labels_emb.shape[1],
+        # ).astype(np.float32)
+        # test_label = np.concatenate((labels_emb, noise), axis=0)
+        # assert (
+        #     data.shape[0] == test_label.shape[0]
+        # ), f"{data.shape[0]}!={test_label.shape[0]}"
         sim_scores = []
-        for batch in range(0, data.shape[0], labels_emb.shape[0]):
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        for batch in tqdm(range(0, data.shape[0], labels_emb.shape[0])):
             
             _, _, sim_score_matrix = self.similarity_function(
-                torch.tensor(data[batch:batch+labels_emb.shape[0]], dtype=torch.float32),
-                torch.tensor(labels_emb, dtype=torch.float32),
-                torch.tensor(support_embeddings["train_image"], dtype=torch.float32),
-                torch.tensor(support_embeddings["train_text"], dtype=torch.float32),
+                torch.tensor(data[batch:batch+labels_emb.shape[0]], dtype=torch.float32).to(device),
+                torch.tensor(labels_emb, dtype=torch.float32).to(device),
+                torch.tensor(support_embeddings["train_image"], dtype=torch.float32).to(device),
+                torch.tensor(support_embeddings["train_text"], dtype=torch.float32).to(device),
                 val_labels,
                 non_zeros,
                 range_anch,
                 self.val_exps,
                 max_gpu_mem_gb=self.max_gpu_mem_gb,
             )
-            sim_score_matrix = sim_score_matrix.numpy().astype(np.float32)#[:, :2]
+            sim_score_matrix = sim_score_matrix.numpy().astype(np.float32)
             sim_scores.append(sim_score_matrix)
         sim_scores = np.concatenate(sim_scores, axis=0)
         predictions = np.argmax(sim_scores.T, axis=0)
@@ -129,7 +131,7 @@ class ASIFMethod(AbsMethod):
         range_anch: range,
         val_exps: list,
         dic_size: int = 100_000,
-        max_gpu_mem_gb: float = 8.0,
+        max_gpu_mem_gb: float = 1.0,
     ) -> tuple[list, dict, torch.Tensor]:
         """Computes the zero-shot classification accuracy using relative representations over sets of anchors.
 

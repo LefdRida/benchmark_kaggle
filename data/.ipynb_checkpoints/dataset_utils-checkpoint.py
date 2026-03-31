@@ -35,17 +35,14 @@ def load_embeddings_from_hf(
     """
     cache_key = f"{repo_id}/{hf_file_name}"
     
-    # # Check cache first
-    # if use_cache and cache_key in _EMBEDDING_CACHE:
-    #     logger.info(f"Loading embeddings from cache: {cache_key}")
-    #     return _EMBEDDING_CACHE[cache_key]
+    # Check cache first
+    if use_cache and cache_key in _EMBEDDING_CACHE:
+        logger.info(f"Loading embeddings from cache: {cache_key}")
+        return _EMBEDDING_CACHE[cache_key]
     
     try:
         logger.info(f"Downloading embeddings from HF: {cache_key}")
-        embed_fpath = hf_hub_download(
-            repo_id=repo_id, 
-            filename=hf_file_name,
-            cache_dir=None)
+        embed_fpath = hf_hub_download(repo_id=repo_id, filename=hf_file_name)
         
         with open(embed_fpath, 'rb') as file:
             emb = pickle.load(file)
@@ -57,8 +54,8 @@ def load_embeddings_from_hf(
         logger.info(f"Loaded embeddings shape: {emb.shape}")
         
         # Cache the embeddings
-        # if use_cache:
-        #     _EMBEDDING_CACHE[cache_key] = emb
+        if use_cache:
+            _EMBEDDING_CACHE[cache_key] = emb
             
         return emb
         

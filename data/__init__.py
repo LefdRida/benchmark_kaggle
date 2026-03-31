@@ -18,6 +18,9 @@ from datasets.mscoco.mscoco_multilabel_classification_dataset import (
     MScocoMultiLabelClassificationDataset, 
     MScocoRetrievalDataset
 )
+from datasets.places365.places365_zeroshot_classification import (
+    Places365ZeroshotClassificationDataset,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +30,7 @@ _DATASET_REGISTRY: Dict[str, Type[DatasetBase]] = {
     # Classification Datasets
     "imagenet1k-classification": Imagenet1kZeroshotClassificationDataset,
     "mscoco-classification": MScocoMultiLabelClassificationDataset,
+    "places365-classification": Places365ZeroshotClassificationDataset,
 
     # Retrieval Datasets
     "flickr30k-retrieval": Flickr30kRetrievalDataset,
@@ -37,6 +41,7 @@ _DATASET_REGISTRY: Dict[str, Type[DatasetBase]] = {
     "flickr30k-retrieval-embedding": Flickr30kRetrievalDataset,
     "mscoco-retrieval-embedding": MScocoRetrievalDataset,
     "mscoco-classification-embedding": MScocoMultiLabelClassificationDataset,
+    "places365-classification-embedding": Places365ZeroshotClassificationDataset,
 }
 
 def get_dataset_class(name: str) -> Type[DatasetBase]:

@@ -14,13 +14,14 @@ class ClassificationTask(AbsTask):
 
     def run(self, method: AbsMethod, support_embeddings: Dict[str, np.ndarray] = None, **kwargs) -> Dict[str, Any]:
         """Run classification using the provided alignment method."""
-        
+        multilabel = False
         if support_embeddings is None:
             support_embeddings = self.support_embeddings
             
         # Generic flow for alignment-based classification:
         if hasattr(method, 'classify'):
              predictions = method.classify(self.test_images, self.support_embeddings.get("labels_emb", None), support_embeddings)
+             return predictions
         else:
             # Fallback: align then compare
             aligned_image_embeddings, aligned_labels = method.align(
@@ -36,18 +37,22 @@ class ClassificationTask(AbsTask):
                     x = x / (np.linalg.norm(x, axis=1, keepdims=True) + 1e-10)
                     y = y / (np.linalg.norm(y, axis=1, keepdims=True) + 1e-10)
                     return np.sum(x * y, axis=1)
-            sim_scores = []
-            for label_idx in range(aligned_labels.shape[0]):
-                l_emb = aligned_labels[label_idx].reshape(1, -1)
-                l_emb = np.repeat(l_emb, aligned_image_embeddings.shape[0], axis=0)
-                sim_score_matrix = similarity_function(aligned_image_embeddings, l_emb)
-                sim_scores.append(sim_score_matrix)
+            predictions = []
+            for batch in range(0, aligned_image_embeddings.shape[0], 256):
+                #for label_idx in range(aligned_labels.shape[0]):
+                #l_emb = aligned_labels.reshape(1, -1)
+                #l_emb = np.repeat(l_emb, 256, axis=0)
+                sim_score_matrix = similarity_function(aligned_image_embeddings[batch:batch+256], aligned_labels).cpu().numpy()
+                pred = np.argmax(sim_score_matrix, axis=1)
+                predictions.extend(pred.tolist())       
             
-            sim_scores = np.array(sim_scores)
-            predictions = np.argmax(sim_scores, axis=0)
-            
-        if hasattr(method, 'evaluate'):
-            results = method.evaluate(self.ground_truth, predictions)
+        if multilabel:
+            acc = 0
+            for idx, pred in enumerate(predictions):
+                if pred in self.ground_truth[idx]:
+                    acc += 1
+            acc /= len(predictions)
+            results = {"accuracy": acc}
         else:
             accuracy = metrics.accuracy_score(self.ground_truth, predictions)
             results = {"accuracy": accuracy}

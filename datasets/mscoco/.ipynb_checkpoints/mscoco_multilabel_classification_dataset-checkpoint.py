@@ -10,7 +10,6 @@ from omegaconf import DictConfig
 class MScoco(DatasetBase):
     def __init__(self, data_path: str):
         super().__init__()
-        self.clsidx_to_labels = {}
         self.load_data(data_path)
         
     def load_data(
@@ -29,6 +28,7 @@ class MScoco(DatasetBase):
         with open(f'{data_path}/annotations/captions_train2017.json', 'rb') as f:
             data = json.load(f)
         f.close()
+
         caption_image_table = (
             pl.DataFrame(data['images'])
             .with_columns(
@@ -38,28 +38,31 @@ class MScoco(DatasetBase):
             )
             .select(['id', 'image_path'])
         )
+
         caption_table = pl.DataFrame(data['annotations'])
         caption_table = caption_table.join(
             caption_image_table,
             left_on="image_id",
             right_on="id",
             how="inner",
-            maintain_order="left_right"
+            maintain_order=True
         )
+
         self.caption_table = (
             caption_table
-            .group_by('image_path', maintain_order=True)
+            .group_by('image_id', 'image_path', maintain_order=True)
             .agg(
                 pl.col('caption').alias('captions'),
                 pl.col('id')
             )
-            .filter(pl.col('captions').list.len() == 5)
+            .filter(pl.col('captions').arr.lengths() == 5)
             .with_row_index(name="image_id")
             .explode("captions")
             .with_row_index(name="caption_id")
             .group_by("image_id", maintain_order=True)
             .agg(pl.col("image_path").first(), pl.col("captions"), pl.col("caption_id"))
         )
+        
         # Load Table for Multilabel Classification
         with open(f'{data_path}/annotations/instances_train2017.json', 'rb') as f:
             data = json.load(f)
@@ -76,22 +79,13 @@ class MScoco(DatasetBase):
                                   ).alias('label_description')
                           )
         )
-        instance_image_table = (
-            pl.DataFrame(data['images'])
-            .with_columns(
-                pl.col("file_name").map_elements(
-                    lambda x: f"{data_path}/train2017/{x}"
-                ).alias("image_path")
-            )
-            .select(['id', 'image_path'])
-        )
-
+        instance_image_table = pl.DataFrame(data['images'])
         instance_table = instance_table.join(
             instance_image_table,
             left_on="image_id",
             right_on="id",
             how="inner",
-            maintain_order="left_right"
+            maintain_order=True
         )
         self.instance_table = (instance_table
                           .group_by('image_id', 'image_path', maintain_order=True)
@@ -99,12 +93,9 @@ class MScoco(DatasetBase):
                                pl.col('label_description').unique(),
                                pl.col('id')
                             )
-                            .with_columns(
-                                pl.col("label").alias("labels")
-                            )
-                        
         )
-      
+
+               
 class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
     def __init__(self, task_config: DictConfig):
         MScoco.__init__(
@@ -112,31 +103,26 @@ class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
             data_path=task_config.data_path
             )
         
-        self.new_idx_mapping = {}
-        for i, idx in enumerate(self.clsidx_to_labels.keys()):
-            self.new_idx_mapping[idx] = i
         if task_config.generate_embedding:
-            self.image_paths = self.instance_table.select("image_path").to_series().to_list()
-            # self.labels_descriptions = (
-            #     self.instance_table
-            #     .select("label_description" , "labels")
-            #     .explode("labels")
-            #     .explode("label_description")
-            #     .sort("labels")
-            #     .select("label_description")
-            #     .unique()
-            #     .to_series()
-            #     .to_list()
-            # )
-            self.labels_descriptions = ["This is an image of " + self.clsidx_to_labels[x] for x in self.clsidx_to_labels.keys()]
+            self.image_paths = self.instance_table.select("image_path").to_list()
+            self.labels_descriptions = (
+                self.instance_table
+                .select("label_description" , "labels")
+                .explode("labels")
+                .explode("label_description")
+                .sort("labels")
+                .select("label_description")
+                .unique()
+                .to_series()
+                .to_list()
+            )
         else: 
             EmbeddingDataset.__init__(
                 self,
                 split=task_config.split  
             )
             self.labels_emb = None
-            labels = self.instance_table.select("label").to_series().to_list()
-            self.labels = [[self.new_idx_mapping[i] for i in x] for x in labels]
+            self.labels = self.instance_table.select("label").to_list()
             self.load_two_encoder_data(
                 hf_repo_id=task_config.hf_repo_id, 
                 hf_img_embedding_name=task_config.hf_img_embedding_name, 
@@ -150,7 +136,7 @@ class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
                 )
                 self.set_training_paired_embeddings()
 
-    def set_labels_emb(self) -> None:
+    def get_labels_emb(self) -> None:
         """Get the text embeddings for all possible labels."""
         if self.text_embeddings.shape[0] == len(self.clsidx_to_labels):
             self.labels_emb = self.text_embeddings
@@ -168,7 +154,7 @@ class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
         assert self.labels_emb.shape[0] == len(self.clsidx_to_labels)
         self.support_embeddings["labels_emb"] = self.labels_emb
 
-    def set_training_paired_embeddings(self) -> None:
+    def get_training_paired_embeddings(self) -> Tuple[np.ndarray, np.ndarray]:
         """Get the paired embeddings for both modalities."""
         assert self.image_embeddings.shape[0] == len(self.labels), "Each image should have a corresponding list of labels."
         assert self.train_idx is not None or self.split=="train", "Please get the train/test split index first."
@@ -177,40 +163,39 @@ class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
         text_emb = []
         image_emb = []
         self.labels_emb = self.support_embeddings['labels_emb']
-        print(len(self.clsidx_to_labels))
+
         if self.split == "train":
             for idx, label_list in enumerate(self.labels):
                 for label_idx in label_list:
-                    label_emb = self.labels_emb[label_idx].reshape(1, -1)
+                    label_emb = self.text_embeddings[label_idx].reshape(1, -1)
                     text_emb.append(label_emb)
                     image_emb.append(self.image_embeddings[idx].reshape(1, -1))
-            train_image_embeddings = np.concatenate(image_emb, axis=0)
-            train_text_embeddings = np.concatenate(text_emb, axis=0)
+            train_image_embeddings = np.array(image_emb)
+            train_text_embeddings = np.array(text_emb)
 
         elif self.split == "large" and self.train_idx is not None:
             for idx in self.train_idx:
                 label_list = self.labels[idx]
                 for label_idx in label_list:
-                    label_emb = self.labels_emb[label_idx].reshape(1, -1)
+                    label_emb = self.text_embeddings[label_idx].reshape(1, -1)
                     text_emb.append(label_emb)
                     image_emb.append(self.image_embeddings[idx].reshape(1, -1))
-            train_image_embeddings = np.concatenate(image_emb, axis=0)
-            train_text_embeddings = np.concatenate(text_emb, axis=0)
+            train_image_embeddings = np.array(image_emb)
+            train_text_embeddings = np.array(text_emb)
         else:
             raise ValueError("Please set split to 'train' or get the train/test split index first.")
         assert train_image_embeddings.shape[0] == train_text_embeddings.shape[0]
         self.support_embeddings["train_image"] = train_image_embeddings
         self.support_embeddings["train_text"] = train_text_embeddings
-        
+
+
 
     def get_test_data(self):
         assert self.image_embeddings is not None and self.text_embeddings is not None, "Please load the data first."
         if self.split == "large":
             assert self.train_idx is not None and self.val_idx is not None, "Please get the train/test split index first."
             val_image_embeddings = self.image_embeddings[self.val_idx]
-            val_labels = []
-            for idx in self.val_idx:
-                val_labels.append(self.labels[idx])
+            val_labels = self.labels[self.val_idx] 
         elif self.split == "val":
             val_image_embeddings = self.image_embeddings
             val_labels = self.labels
@@ -232,6 +217,13 @@ class MScocoRetrievalDataset(MScoco, EmbeddingDataset):
         else:
             EmbeddingDataset.__init__(
                 self,
+                img_encoder=task_config.img_encoder,
+                text_encoder=task_config.text_encoder,
+                hf_img_embedding_name=task_config.hf_img_embedding_name,
+                hf_text_embedding_name=task_config.hf_text_embedding_name,
+                hf_repo_id=task_config.hf_repo_id,
+                train_test_ratio=task_config.train_test_ratio,
+                seed=task_config.seed,
                 split=task_config.split
             )
             self.image_paths = self.caption_table.select("image_path").to_series().to_list()
@@ -249,9 +241,9 @@ class MScocoRetrievalDataset(MScoco, EmbeddingDataset):
                     train_test_ratio=task_config.train_test_ratio, 
                     seed=task_config.seed
                 )
-                self.get_training_paired_embeddings()
+                self.set_training_paired_embeddings()
         
-    def get_training_paired_embeddings(self) -> None:
+    def get_training_paired_embeddings(self) -> Tuple[np.ndarray, np.ndarray]:
         """Get the paired embeddings for both modalities."""
         assert self.text_embeddings.shape[0] == len(self.captions)*5, "To pair embeddings, the text embeddings should contain only all possible labels."
         assert self.image_embeddings.shape[0] == len(self.captions), "Each image should have a corresponding list of labels."

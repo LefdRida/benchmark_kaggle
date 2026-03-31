@@ -1,0 +1,194 @@
+{
+    "dinov2_dinov2-giant_all_mpnet_base_v2_all-mpnet-base-v2": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.0015633882888004549
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7419272313814668
+        }
+    },
+    "dinov2_dinov2-base_all_mpnet_base_v2_all-mpnet-base-v2": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.021915861284820922
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7803865832859579
+        }
+    },
+    "dinov2_dinov2-small_all_mpnet_base_v2_all-mpnet-base-v2": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.013473564525298465
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7335133598635588
+        }
+    },
+    "dinov2_dinov2-large_all_mpnet_base_v2_all-mpnet-base-v2": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.006395679363274588
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7914440022740193
+        }
+    },
+    "dinov2_dinov2-giant_gtr_t5_gtr-t5-base": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.022939169982944856
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7417566799317794
+        }
+    },
+    "dinov2_dinov2-base_gtr_t5_gtr-t5-base": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.03956793632745878
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7803297328027288
+        }
+    },
+    "dinov2_dinov2-small_gtr_t5_gtr-t5-base": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.02839681637293917
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7331154064809551
+        }
+    },
+    "dinov2_dinov2-large_gtr_t5_gtr-t5-base": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.036128482092097784
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7913303013075611
+        }
+    },
+    "dinov2_dinov2-giant_gtr_t5_gtr-t5-large": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.012308129619101762
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7419556566230813
+        }
+    },
+    "dinov2_dinov2-base_gtr_t5_gtr-t5-large": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.028538942581011938
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7804718590108016
+        }
+    },
+    "dinov2_dinov2-small_gtr_t5_gtr-t5-large": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.02649232518476407
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7331438317225697
+        }
+    },
+    "dinov2_dinov2-large_gtr_t5_gtr-t5-large": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.015008527572484366
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7913018760659466
+        }
+    },
+    "dinov2_dinov2-giant_gtr_t5_gtr-t5-xl": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.03121091529277999
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.741841955656623
+        }
+    },
+    "dinov2_dinov2-base_gtr_t5_gtr-t5-xl": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.03681068789084707
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7804718590108016
+        }
+    },
+    "dinov2_dinov2-small_gtr_t5_gtr-t5-xl": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.061938601478112566
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7332291074474133
+        }
+    },
+    "dinov2_dinov2-large_gtr_t5_gtr-t5-xl": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.05983513359863559
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7913303013075611
+        }
+    },
+    "dinov2_dinov2-giant_gtr_t5_gtr-t5-xxl": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.053411028993746446
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7418703808982376
+        }
+    },
+    "dinov2_dinov2-base_gtr_t5_gtr-t5-xxl": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.021688459351904492
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7804718590108016
+        }
+    },
+    "dinov2_dinov2-small_gtr_t5_gtr-t5-xxl": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.01725412166003411
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7333996588971006
+        }
+    },
+    "dinov2_dinov2-large_gtr_t5_gtr-t5-xxl": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.03749289368959636
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7914155770324047
+        }
+    },
+    "dinov2_dinov2-giant_sentence_t5_sentence-t5-base": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.038118249005116546
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7409323479249573
+        }
+    },
+    "dinov2_dinov2-base_sentence_t5_sentence-t5-base": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.02160318362706083
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7802160318362706
+        }
+    },
+    "dinov2_dinov2-small_sentence_t5_sentence-t5-base": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.0016202387720295622
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.732291074474133
+        }
+    },
+    "dinov2_dinov2-large_sentence_t5_sentence-t5-base": {
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.07245594087549743
+        },
+        "mscoco-classification-Classification-asif": {
+            "accuracy": 0.7904491188175099
+        }
+    }
+}

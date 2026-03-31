@@ -10,6 +10,7 @@ from tqdm import tqdm
 import numpy as np
 import torch
 
+cache_dir = "/home/rida.lefdali/lustre/scalableml-um6p-st-sccs-10v5rwpbsmu/lefdali-lustre/embedding_model"
 def cosplace_img(img_files: list, batch_size: int = 32) -> np.ndarray:
     """Extract image features using CosPlace model specifically trained for the Pittsburgh dataset.
 
@@ -139,7 +140,7 @@ def dinov3(img_files: list[str], batch_size: int = 50, model_variant=None):
     
     print(f"Loading {model_variant.upper()}")
     processor = AutoImageProcessor.from_pretrained(f"facebook/{model_variant}")
-    model = AutoModel.from_pretrained(f"facebook/{model_variant}")
+    model = AutoModel.from_pretrained(f"facebook/{model_variant}", cache_dir=cache_dir)
     model = model.cuda()
     total_params = sum(param.numel() for param in model.parameters())
     img_embeddings = []
@@ -175,7 +176,7 @@ def dinov2(img_files: list[str], batch_size: int = 50, model_variant=None) -> np
     
     print(f"Loading {model_variant.upper()}")
     processor = AutoImageProcessor.from_pretrained(f"facebook/{model_variant}")
-    model = AutoModel.from_pretrained(f"facebook/{model_variant}")
+    model = AutoModel.from_pretrained(f"facebook/{model_variant}", cache_dir=cache_dir)
     model = model.cuda()
     total_params = sum(param.numel() for param in model.parameters())
     img_embeddings = []
@@ -202,7 +203,7 @@ def dinov2(img_files: list[str], batch_size: int = 50, model_variant=None) -> np
 def ijepa(img_files: list[str], batch_size: int = 50, model_variant=None):
     assert model_variant in ['ijepa_vith14_22k', 'ijepa_vitg16_22k'], f"Model Variant ({model_variant}) Is Not Supported"
     processor = AutoProcessor.from_pretrained(f"facebook/{model_variant}", token=HF_TOKEN)
-    model = AutoModel.from_pretrained(f"facebook/{model_variant}", device_map="cuda", token=HF_TOKEN)
+    model = AutoModel.from_pretrained(f"facebook/{model_variant}", device_map="cuda", token=HF_TOKEN, cache_dir=cache_dir)
     total_params = sum(param.numel() for param in model.parameters())
     img_embeddings = []
     print(f"number of params {total_params}")
@@ -229,7 +230,7 @@ def sentence_t5(text: list[str], batch_size: int = 50, model_variant=None) -> np
         text features
     """
     assert model_variant in ['sentence-t5-xxl', 'sentence-t5-xl', 'sentence-t5-large', 'sentence-t5-base'], f"Model Variant ({model_variant}) Is Not Supported"
-    model = SentenceTransformer(f"sentence-transformers/{model_variant}")
+    model = SentenceTransformer(f"sentence-transformers/{model_variant}", cache_folder=cache_dir)
     model = model.cuda()
     total_params = sum(param.numel() for param in model.parameters())
     print(f"number of params {total_params}")
@@ -244,7 +245,7 @@ def gtr_t5(text: list[str], batch_size: int = 50, model_variant=None) -> np.ndar
         text features
     """
     assert model_variant in ['gtr-t5-xxl', 'gtr-t5-xl', 'gtr-t5-large', 'gtr-t5-base'], f"Model Variant ({model_variant}) Is Not Supported"
-    model = SentenceTransformer(f"sentence-transformers/{model_variant}")
+    model = SentenceTransformer(f"sentence-transformers/{model_variant}", cache_folder=cache_dir)
     model = model.cuda()
     total_params = sum(param.numel() for param in model.parameters())
     print(f"number of params {total_params}")
@@ -255,7 +256,7 @@ def all_mpnet_base_v2(text: list[str],  batch_size: int = 50, model_variant=None
     pooling = mean_pooling
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModel.from_pretrained(model_name, trust_remote_code=True, device_map=device).half()
+    model = AutoModel.from_pretrained(model_name, trust_remote_code=True, device_map=device, cache_dir=cache_dir).half()
     total_params = sum(param.numel() for param in model.parameters())
     text_features = []
     print(f"number of params {total_params}")
@@ -275,7 +276,7 @@ def alibaba_gte_en_v1_5(text: list[str],  batch_size: int = 50, model_variant=No
     pooling = bos_pooling
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModel.from_pretrained(model_name, trust_remote_code=True, device_map=device).half()
+    model = AutoModel.from_pretrained(model_name, trust_remote_code=True, device_map=device, cache_dir=cache_dir).half()
     total_params = sum(param.numel() for param in model.parameters())
     text_features = []
     print(f"number of params {total_params}")
@@ -296,7 +297,7 @@ def baai_bge_en_v1_5(text: list[str],  batch_size: int = 50, model_variant=None)
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     model_name = f"BAAI/{model_variant}"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModel.from_pretrained(model_name, device_map=device)
+    model = AutoModel.from_pretrained(model_name, device_map=device, cache_dir=cache_dir)
     model.eval()
     total_params = sum(param.numel() for param in model.parameters())
     # Tokenize sentences
@@ -319,7 +320,7 @@ def gte_qwen2_1_5B_instruct(text: list[str], batch_size: int = 50, model_variant
     pooling = last_token_pool
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModel.from_pretrained(model_name, trust_remote_code=True, device_map=device).half()
+    model = AutoModel.from_pretrained(model_name, trust_remote_code=True, device_map=device, cache_dir=cache_dir).half()
     total_params = sum(param.numel() for param in model.parameters())
     inputs = tokenizer(text, padding=True, truncation=True, max_length=1024, return_tensors='pt').to(device)
 
@@ -334,10 +335,9 @@ def infloat_e5(text: list[str], batch_size: int = 50, model_variant=None) -> np.
     # Load model from HuggingFace Hub
     assert model_variant in ['e5-small-v2', 'e5-base-v2', 'e5-large-v2'], f"Model Variant ({model_variant}) Is Not Supported"
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-    model_name = f"BAAI/{model_variant}"
     
-    tokenizer = AutoTokenizer.from_pretrained(f'intfloat/{model_variant}')
-    model = AutoModel.from_pretrained(f'intfloat/{model_variant}', device_map=device)
+    tokenizer = AutoTokenizer.from_pretrained(f'intfloat/{model_variant}', cache_dir=cache_dir)
+    model = AutoModel.from_pretrained(f'intfloat/{model_variant}', device_map=device, cache_dir=cache_dir)
     model.eval()
     total_params = sum(param.numel() for param in model.parameters())
     # Tokenize sentences

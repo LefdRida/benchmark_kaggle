@@ -3,17 +3,18 @@ import numpy as np
 from typing import List, Dict, Tuple
 from omegaconf import DictConfig
 import polars as pl
+import re
 
-class Imagenet1k(DatasetBase):
-    def __init__(self, root: str, loc_val_solution: str, loc_synset_mapping: str, **kwargs):
+class Places365(DatasetBase):
+    def __init__(self, root: str, filelist_places: str,categories_places: str, **kwargs):
         DatasetBase.__init__(self)
-        self.load_data(root, loc_val_solution, loc_synset_mapping)
+        self.load_data(root, filelist_places,categories_places)
 
     def load_data(
-        self, root: str, loc_val_solution: str,loc_synset_mapping: str
+        self, root: str, filelist_places: str,categories_places: str
     ) -> None:
         """
-        Load the ImageNet dataset from Hugging Face Arrow format and
+        Load the Places365 dataset from Hugging Face Arrow format and
         corresponding precomputed embeddings.
 
         Args:
@@ -26,41 +27,32 @@ class Imagenet1k(DatasetBase):
             clsidx_to_labels: a dict of class idx to str.
         """
         """
-        Args:
+        Args:   
             cfg_dataset: configuration file
 
         Returns:
             img_paths: list of image absolute paths
             text_descriptions: list of text descriptions
         """
-        #'/kaggle/input/imagenet-object-localization-challenge/LOC_val_solution.csv'
-        #"/kaggle/input/imagenet-object-localization-challenge/LOC_synset_mapping.txt"
         mapping = {}
-        with open(loc_synset_mapping, "r") as f:
-            for idx, l in enumerate(f.readlines()):
-                class_id = l.split(" ")[0]
-                class_name = " ".join(l.split(" ")[1:]).split(",")[0].strip().removesuffix(',')
-                mapping[class_id] = (class_name, idx)
+        with open(categories_places, "r") as f:
+            for _, l in enumerate(f.readlines()):
+                s = l.strip().split(" ")
+                class_id = s[-1]
+                class_name = s[0].split("/")[-1]
+                class_name = re.sub(r'[^a-zA-Z0-9\s]', ' ', class_name)
+                mapping[int(class_id)] = (class_name, int(class_id))
                 
-        table = pl.read_csv(loc_val_solution)
+        table = pl.read_csv(filelist_places, separator = " ", has_header=False)
+        table.columns = ["image_fname", "label_id"]
         table = table.with_columns(
-            pl.col('PredictionString')
-            .map_elements(lambda x: x.split(' ')[0], return_dtype=pl.String)
-            .alias('class_string')
-            )
-        table = table.with_columns(
-            pl.col('class_string')
+            pl.col('label_id')
             .map_elements(lambda x: mapping[x][0], return_dtype=pl.String)
             .alias('label')
             )
         table = table.with_columns(
-            pl.col('class_string')
-            .map_elements(lambda x: mapping[x][1], return_dtype=pl.Int32)
-            .alias('label_id')
-            )
-        table = table.with_columns(
-            pl.col('ImageId')
-            .map_elements(lambda x: f"{root}/{x}.JPEG", return_dtype=pl.String)
+            pl.col('image_fname')
+            .map_elements(lambda x: f"{root}/{x}", return_dtype=pl.String)
             .alias('image_path')
             )
         
@@ -72,13 +64,13 @@ class Imagenet1k(DatasetBase):
                 self.clsidx_to_labels[sample["label_id"]] = sample["label"]
         
 
-class Imagenet1kZeroshotClassificationDataset(Imagenet1k, EmbeddingDataset):
+class Places365ZeroshotClassificationDataset(Places365, EmbeddingDataset):
     def __init__(self, task_config: DictConfig):
-        Imagenet1k.__init__(
+        Places365.__init__(
             self, 
             root=task_config.root, 
-            loc_val_solution=task_config.loc_val_solution, 
-            loc_synset_mapping=task_config.loc_synset_mapping
+            filelist_places=task_config.filelist_places, 
+            categories_places=task_config.categories_places
             )
         
         self.image_paths = self.table.select("image_path").to_series().to_list()
@@ -89,7 +81,9 @@ class Imagenet1kZeroshotClassificationDataset(Imagenet1k, EmbeddingDataset):
                 self,
                 split=task_config.split
             )
-            self.labels = self.table.select("label_id").to_numpy().flatten()
+            self.labels = self.table.select("label_id").to_numpy()
+            #print(self.labels.shape)
+            #print(self.image_embeddings.shape[0])
             self.metatask = task_config.metatask
             self.load_two_encoder_data(
                 hf_repo_id=task_config.hf_repo_id, 
@@ -122,7 +116,7 @@ class Imagenet1kZeroshotClassificationDataset(Imagenet1k, EmbeddingDataset):
                 label_emb = self.labels_emb[label].reshape(-1)
                 text_emb.append(label_emb)
             train_text_embeddings = np.array(text_emb)
-            train_labels = self.labels
+
         elif self.split == "large" and self.train_idx is not None:
             train_image_embeddings =  self.image_embeddings[self.train_idx]
             for idx in self.train_idx:

@@ -2,6 +2,15 @@ from abc import abstractmethod
 import numpy as np
 from typing import Tuple, Any, Dict
 from .dataset_utils import load_embeddings_from_hf
+from sklearn.model_selection import StratifiedShuffleSplit
+import torch
+def whitening_torch(embeddings):
+    mu = torch.mean(embeddings, dim=0, keepdim=True)
+    cov = torch.mm((embeddings - mu).t(), embeddings - mu)
+    u, s, vt = torch.svd(cov)
+    W = torch.mm(u, torch.diag(1/torch.sqrt(s)))
+    embeddings = torch.mm(embeddings - mu, W)
+    return embeddings
 
 class DatasetBase:
     """Base class for all datasets."""
@@ -25,7 +34,7 @@ class DatasetBase:
         """Return text. Override in subclass."""
         return self.captions
 
-    def get_labels(self) -> Any:
+    def get_labels_descriptions(self) -> Any:
         """Return labels. Override in subclass."""
         return self.labels_descriptions
 
@@ -60,6 +69,8 @@ class EmbeddingDataset:
             hf_file_name=hf_text_embedding_name, 
             repo_id=hf_repo_id
         )
+
+
         return self.image_embeddings, self.text_embeddings
 
     def set_train_test_split_index(self, train_test_ratio: float = 0.7, seed: int = 42) -> None:
@@ -68,12 +79,18 @@ class EmbeddingDataset:
             "Please load the data first."
         assert self.split == "large", "Split must be 'large' to create train/test split."
         
-        n = self.image_embeddings.shape[0]
-        arange = np.arange(n)
-        np.random.seed(seed)
-        np.random.shuffle(arange)
-        self.train_idx = arange[:int(n * train_test_ratio)]
-        self.val_idx = arange[int(n * train_test_ratio):]
+        #n = self.image_embeddings.shape[0]
+        
+        #arange = np.arange(n)
+        #np.random.seed(seed)
+        #np.random.shuffle(arange)
+        #self.train_idx = arange[:int(n * train_test_ratio)]
+        #self.val_idx = arange[int(n * train_test_ratio):]
+
+        sss = StratifiedShuffleSplit(n_splits=1, test_size=1-train_test_ratio, random_state=seed)
+        for i, (train_index, test_index) in enumerate(sss.split(self.image_embeddings, self.labels)):
+            self.train_idx = train_index
+            self.val_idx = test_index
 
 
     def set_training_paired_embeddings(self) -> None:

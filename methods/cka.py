@@ -1,123 +1,111 @@
 import numpy as np
-from sklearn import datasets, cluster
 import torch
-import os
+from base.base import AbsMethod
+from .cka_core import linear_local_CKA
 from tqdm import tqdm
-from sklearn.decomposition import PCA
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.cluster import KMeans
-import pandas as pd
-from .cka_core import * 
-
-
 
 import numpy as np
-from typing import Dict, Any, Optional
+import torch
 from base.base import AbsMethod
-# Importing from original structure
+from .cka_core import linear_local_CKA
 
+
+
+### working base from train and query set from test for one to one retrieval 
 class CKAMethod(AbsMethod):
-    """CSA (CCA-based) alignment technique."""
-    
-    def __init__(self, method: str = "cka"):
+
+    def __init__(self, base_samples=320, query_samples=500):
         super().__init__("CKA")
-        self.method = method
-        self.stretch = False
-        self.fitted = False
-        self.seed = 0
-        self.seed2 = 0
-        self.base_samples = 100
-        self.query_samples = 100
-        self.clustering_mode = 0
-        self.same = False
-        self.graph_func = linear_local_CKA
+        self.base_samples = base_samples
+        self.query_samples = query_samples
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    def align(
-        self, 
-        image_embeddings: np.ndarray, 
-        text_embeddings: np.ndarray, 
-        support_embeddings: Dict[str, np.ndarray], 
-        **kwargs
-        ) -> np.ndarray:
-        """
-        Align embeddings using CSA.
-        """
+    def align(self, image_embeddings, text_embeddings, **kwargs):
+        return image_embeddings, text_embeddings
 
-        (source_base, 
-        target_base, 
-        source_query, 
-        target_query ) = get_data_sep(
-                0, 
-                self.seed, 
-                self.base_samples, 
-                self.query_samples,  
-                support_embeddings['train_image'], 
-                support_embeddings['train_text'], 
-                image_embeddings, 
-                text_embeddings,    
-                kwargs['source_base_cluster'],
-                kwargs['target_base_cluster'],
-                self.clustering_mode, 
-                self.same,
-                self.stretch
-            )
-        
-        self.graph = self.graph_func(source_base, target_base, source_query, target_query, self.device)
-        
-    
     def retrieve(
-        self, 
-        image_embeddings: np.ndarray, 
-        text_embeddings: np.ndarray, 
-        support_embeddings: Dict[str, np.ndarray], 
+        self,
+        queries: np.ndarray,        # test images (N_images, D)
+        gt_ids=None,                # image_id -> list of caption indices
+        documents: np.ndarray=None, # test captions (5N, D)
+        support_embeddings=None,
         topk: int = 5,
         num_gt: int = 1,
         **kwargs
-        ) -> np.ndarray:
+    ):
 
-        self.align(
-            image_embeddings, 
-            text_embeddings, 
-            support_embeddings, 
-            **kwargs
+        # --------------------------------------------------
+        # TRAIN SPLIT → BASE
+        # --------------------------------------------------
+
+        train_images = support_embeddings["train_image"]
+        train_texts  = support_embeddings["train_text"]
+
+        rng = np.random.default_rng(0)
+        base_idx = rng.choice(
+            len(train_images),
+            size=min(self.base_samples, len(train_images)),
+            replace=False
         )
 
-        if self.graph is None:
-            return None
+        base_images = torch.tensor(train_images[base_idx], dtype=torch.float32).to(self.device)
+        base_texts  = torch.tensor(train_texts[base_idx], dtype=torch.float32).to(self.device)
 
-        top_doc = 0
-        total = 0
+        # --------------------------------------------------
+        # TEST SPLIT → QUERY (1-to-1 construction)
+        # --------------------------------------------------
 
-        for i in tqdm(range(len(self.graph))):
-            row = self.graph[i]
-            ind_row = sorted(list(range(len(self.graph))), key = lambda x: -row[x])
-        
-            if i in ind_row[:topk]:
-                top_doc += 1
+        images = torch.tensor(queries, dtype=torch.float32)
+        captions = torch.tensor(documents, dtype=torch.float32)
 
-            total += 1
-        
-        return top_doc / total
+        assert len(images) >= self.query_samples
 
-    
-    def classify(
-        self, 
-        image_embeddings: np.ndarray, 
-        text_embeddings: np.ndarray, 
-        support_embeddings: Dict[str, np.ndarray], 
-        **kwargs
-        ):
-        self.align(
-            image_embeddings, 
-            text_embeddings, 
-            support_embeddings, 
-            **kwargs
+        aligned_images = []
+        aligned_captions = []
+
+        for i in range(self.query_samples):
+            aligned_images.append(images[i])
+
+            # pick first valid caption for that image
+            caption_idx = gt_ids[i][0]
+            aligned_captions.append(captions[caption_idx])
+
+        query_images = torch.stack(aligned_images).to(self.device)
+        query_texts  = torch.stack(aligned_captions).to(self.device)
+
+        # --------------------------------------------------
+        # Square CKA Graph
+        # --------------------------------------------------
+
+        graph = linear_local_CKA(
+            source_base=base_texts,
+            target_base=base_images,
+            source_query=query_texts,
+            target_query=query_images,
+            device=self.device
         )
-        torch.manual_seed(0)
-        shuffle = torch.randperm(self.graph.shape[1])
-        
-        graph_shuffled = self.graph[:, shuffle]
-        row_ind, col_ind = linear_sum_assignment(graph_shuffled, maximize=True)
-        return sum(col_ind[shuffle] == row_ind)/len(col_ind)
- 
+
+        graph = graph.detach().cpu().numpy()
+
+        # --------------------------------------------------
+        # Diagonal Retrieval Evaluation
+        # --------------------------------------------------
+
+        results = []
+
+        for i in range(self.query_samples):
+
+            row = graph[i]
+            sorted_idx = np.argsort(-row)[:topk]
+
+            hit = np.zeros(topk)
+
+            correct_index = i
+
+            for k, idx in enumerate(sorted_idx):
+                if idx == correct_index:
+                    hit[k] = 1
+
+            results.append(hit)
+
+        return results
