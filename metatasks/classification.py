@@ -21,7 +21,6 @@ class ClassificationTask(AbsTask):
         # Generic flow for alignment-based classification:
         if hasattr(method, 'classify'):
              predictions = method.classify(self.test_images, self.support_embeddings.get("labels_emb", None), support_embeddings)
-             return predictions
         else:
             # Fallback: align then compare
             
