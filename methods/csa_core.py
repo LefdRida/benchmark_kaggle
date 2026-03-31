@@ -103,11 +103,12 @@ class NormalizedCCA:
 
         # zero mean data and transform
         data1 = data1 - self.traindata1_mean
-        dummy_data = np.zeros((data1.shape[0], data2.shape[1]))
-        data1, _ = self.cca.transform((data1, dummy_data))
+        dummy_data2 = np.zeros((data1.shape[0], data2.shape[1]))
         data2 = data2 - self.traindata2_mean
-        dummy_data = np.zeros((data2.shape[0], data1.shape[1]))
-        _, data2 = self.cca.transform((dummy_data, data2))
+        dummy_data1 = np.zeros((data2.shape[0], data1.shape[1]))
+        
+        data1, _ = self.cca.transform((data1, dummy_data2))
+        _, data2 = self.cca.transform((dummy_data1, data2))
         return data1, data2
 
 
