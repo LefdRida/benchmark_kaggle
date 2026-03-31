@@ -1,8 +1,3 @@
-torch
-torchvision
 omegaconf
 cca-zoo
-huggingface_hub
-polars
-transformers
-sentence-transformers
+
