@@ -104,6 +104,7 @@ class NormalizedCCA:
         # zero mean data and transform
         data1 = data1 - self.traindata1_mean
         dummy_data = np.zeros_like(data1)
+        print(dummy_data.shape)
         data1, _ = self.cca.transform((data1, dummy_data))
         data2 = data2 - self.traindata2_mean
         dummy_data = np.zeros_like(data2)
