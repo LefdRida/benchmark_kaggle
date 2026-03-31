@@ -1,6 +1,6 @@
 config = {
     "tasks": ["imagenet1k", "places365"], # dataset_name
-    "methods": ["csa", "asif"],  # Method to use: "asif", "csa", or "cka"
+    "methods": ["asif"],  # Method to use: "asif", "csa", or "cka" "csa", 
     "csa":{
         "sim_dim": 700,
     },
