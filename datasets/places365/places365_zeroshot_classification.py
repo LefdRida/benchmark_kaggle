@@ -4,6 +4,7 @@ from typing import List, Dict, Tuple
 from omegaconf import DictConfig
 import polars as pl
 import re
+from sklearn.model_selection import StratifiedShuffleSplit
 
 class Places365(DatasetBase):
     def __init__(self, root: str, filelist_places: str,categories_places: str, **kwargs):
@@ -119,12 +120,19 @@ class Places365ZeroshotClassificationDataset(Places365, EmbeddingDataset):
 
         elif self.split == "large" and self.train_idx is not None:
             train_image_embeddings =  self.image_embeddings[self.train_idx]
+            train_labels = self.labels[self.train_idx]
+            sss = StratifiedShuffleSplit(n_splits=1, train_size=500000, random_state=42)
+            for i, (train_index, _) in enumerate(sss.split(train_image_embeddings, train_labels)):
+                self.train_idx = train_index
+                
+            train_image_embeddings =  self.image_embeddings[self.train_idx]
+            train_labels = self.labels[self.train_idx]
             for idx in self.train_idx:
                 label = self.labels[idx]
                 label_emb = self.labels_emb[label].reshape(-1)
                 text_emb.append(label_emb)
             train_text_embeddings = np.array(text_emb)
-            train_labels = self.labels[self.train_idx] 
+             
             
         else:
             raise ValueError("Please set split to 'train' or get the train/test split index first.")
