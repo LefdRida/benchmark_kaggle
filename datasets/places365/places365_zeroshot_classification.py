@@ -129,7 +129,8 @@ class Places365ZeroshotClassificationDataset(Places365, EmbeddingDataset):
         else:
             raise ValueError("Please set split to 'train' or get the train/test split index first.")
         assert train_image_embeddings.shape[0] == train_text_embeddings.shape[0]
-
+        print(train_image_embeddings.shape)
+        print(train_text_embeddings.shape)
         self.support_embeddings["train_image"] = train_image_embeddings
         self.support_embeddings["train_text"] = train_text_embeddings
         self.support_embeddings["train_labels"] = train_labels
