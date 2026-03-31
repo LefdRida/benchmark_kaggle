@@ -17,7 +17,15 @@ class MMA_Benchmark:
             for method_name, method_class in self.methods.items():
                 method = method_class(**self.config[method_name])
                 print(f"Running method: {method.name}")
-                results[f"{task.name}-{method_name}"] = task.run(method, support_embeddings=support_embeddings, **kwargs)
+                res = task.run(method, support_embeddings=support_embeddings, **kwargs)
+                print(f"Results: {res}")
+                results[f"{task.name}-{method_name}"] = res
+                # Delete references
+                del res
+                # Manually collect garbage
+                gc.collect()
+
+
         return results
 
     def add_task(self, task: AbsTask):
