@@ -24,6 +24,8 @@ class ClassificationTask(AbsTask):
              return predictions
         else:
             # Fallback: align then compare
+            print(self.test_images.shape)
+            print(self.support_embeddings.get("labels_emb", None).shape)
             aligned_image_embeddings, aligned_labels = method.align(
                 image_embeddings=self.test_images,
                 text_embeddings=self.support_embeddings.get("labels_emb", None),
