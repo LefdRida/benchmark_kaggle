@@ -1,4 +1,4 @@
-from .model import *
+# from .model import *
 from typing import Dict
 import logging
 logger = logging.getLogger(__name__)
@@ -6,20 +6,20 @@ logger = logging.getLogger(__name__)
 # Registry dictionary mapping names to image embedding models
 _IMAGE_EMBEDDING_MODEL_REGISTRY: Dict[str, callable] = {
     # Image Embedding Models
-    "dinov3": dinov3,
-    "dinov2": dinov2,
-    "google_vit": google_vit,
-    "ibot": ibot,
-    "infloat_e5": infloat_e5,
+    "dinov3": None,
+    "dinov2": None,
+    "google_vit": None,
+    "ibot": None,
+    "infloat_e5": None,
 }
 
 _TEXT_EMBEDDING_MODEL_REGISTRY: Dict[str, callable] = {
     # Text Embedding Models
-    "sentence_t5": sentence_t5,
-    "gtr_t5": gtr_t5,
-    "all_mpnet_base_v2": all_mpnet_base_v2,
-    "alibaba_gte_en_v1_5": alibaba_gte_en_v1_5,
-    "baai_bge_en_v1_5": baai_bge_en_v1_5,
+    "sentence_t5": None,
+    "gtr_t5": None,
+    "all_mpnet_base_v2": None,
+    "alibaba_gte_en_v1_5": None,
+    "baai_bge_en_v1_5": None,
 }
 
 _IMAGE_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
