@@ -17,8 +17,8 @@ config = {
 
     "imagenet1k": {
         "root": "/home/rida.lefdali/work/dataset/imagenet1k/val",
-        "loc_val_solution": "/home/rida.lefdali/work/dataset/imagenet1k/LOC_val_solution.csv",
-        "loc_synset_mapping": "/home/rida.lefdali/work/dataset/imagenet1k/LOC_synset_mapping.txt",
+        "loc_val_solution": "/kaggle/input/datasets/odddatascience/imagenet1k/LOC_val_solution.csv",
+        "loc_synset_mapping": "/kaggle/input/datasets/odddatascience/imagenet1k/LOC_synset_mapping.txt",
         "hf_img_embedding_name": "ImageNet_img_embed_dinov2-giant.pkl", 
         "hf_text_embedding_name": "ImageNet_text_embed_gtr-t5-large.pkl", 
         "hf_repo_id": "ridalefdali/imagenet1k_classification_embeddings", 
@@ -59,8 +59,8 @@ config = {
     },
     "places365": {
         "root": "/home/rida.lefdali/work/dataset/places365_standard/train",
-        "filelist_places": "/home/rida.lefdali/work/dataset/places365_standard/places365_train_standard.txt",
-        "categories_places": "/home/rida.lefdali/work/dataset/places365_standard/categories_places365.txt",
+        "filelist_places": "/kaggle/input/datasets/odddatascience/places365/places365_train_standard.txt",
+        "categories_places": "/kaggle/input/datasets/odddatascience/places365/categories_places365.txt",
         "hf_img_embedding_name": "places365_dinov2_dinov2-giant_image_embeddings.pkl", 
         "hf_text_embedding_name": "places365_gtr_t5_gtr-t5-large_text_embeddings.pkl", 
         "hf_repo_id": "ridalefdali/places365_classification_embeddings", #"ridalefdali/mscoco_classification_embeddings"
