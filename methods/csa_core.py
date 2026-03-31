@@ -49,6 +49,8 @@ class NormalizedCCA:
         # zero mean data
         traindata1, traindata1_mean = origin_centered(traindata1)
         traindata2, traindata2_mean = origin_centered(traindata2)
+        print(traindata1.shape)
+        print(traindata2.shape)
         # print(traindata1_mean)
         # print(traindata2_mean)
         self.traindata1_mean, self.traindata2_mean = traindata1_mean, traindata2_mean
