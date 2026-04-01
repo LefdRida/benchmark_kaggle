@@ -180,8 +180,3 @@ class EmbeddingSpaceAnalysisTask(AbsTask):
         geo_preserve_metric = (1/train_image.shape[0]**2) * np.linalg.norm(train_image@train_image.T  - train_text@train_text.T)**2
 
         return {"geo_preserve_metric": geo_preserve_metric, "image_isoscore": image_isoscore, "text_isoscore": text_isoscore}
-@
-
-
-    
-    
