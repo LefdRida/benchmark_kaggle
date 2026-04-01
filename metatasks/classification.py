@@ -54,7 +54,7 @@ class ClassificationTask(AbsTask):
                     acc += 1
             acc /= len(predictions)
             results = {"accuracy": acc}
-        elif knn == "knn":
+        elif knn:
             self.ground_truth = torch.Tensor(self.ground_truth)
             predictions = torch.Tensor(predictions)
             correct = predictions.eq(self.ground_truth.view(-1, 1))
