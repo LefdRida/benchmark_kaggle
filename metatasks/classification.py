@@ -2,7 +2,7 @@ import numpy as np
 from sklearn import metrics
 from typing import Any, Dict, List
 from base.base import AbsTask, AbsModel, AbsMethod
-
+import torch
 class ClassificationTask(AbsTask):
     """Task for zero-shot classification evaluation."""
     

@@ -2,6 +2,8 @@ import numpy as np
 from sklearn import metrics
 from typing import Any, Dict, List
 from base.base import AbsTask, AbsModel, AbsMethod
+import torch
+from IsoScore.IsoScore import *
 
 class EmbeddingSpaceAnalysisTask(AbsTask):
     """Task for zero-shot classification evaluation."""
