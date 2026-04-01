@@ -136,7 +136,8 @@ class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
             )
             self.labels_emb = None
             labels = self.instance_table.select("label").to_series().to_list()
-            self.labels = [[self.new_idx_mapping[i] for i in x] for x in labels]
+            #self.labels = [[self.new_idx_mapping[i] for i in x] for x in labels]
+            self.labels = [[self.new_idx_mapping[max(set(x), key=x.count)]] for x in labels]
             self.load_two_encoder_data(
                 hf_repo_id=task_config.hf_repo_id, 
                 hf_img_embedding_name=task_config.hf_img_embedding_name, 
