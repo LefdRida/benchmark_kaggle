@@ -8,7 +8,7 @@ config = {
         "non_zeros": 800,
     },
     "knn":{
-        "num_classes": 365,
+        "num_classes": 1000,
     },
     "retrieval":{
         "topk": 5,
