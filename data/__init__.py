@@ -36,6 +36,9 @@ _DATASET_REGISTRY: Dict[str, Type[DatasetBase]] = {
     "flickr30k-retrieval": Flickr30kRetrievalDataset,
     "mscoco-retrieval": MScocoRetrievalDataset,
 
+    "imagenet1k-embedding_space_analysis": Imagenet1kZeroshotClassificationDataset,
+    "places365-embedding_space_analysis": Places365ZeroshotClassificationDataset,
+
     # Embedding Generation Datasets (mapped to same classes, logic inside class handles generation mode)
     "imagenet1k-classification-embedding": Imagenet1kZeroshotClassificationDataset,
     "flickr30k-retrieval-embedding": Flickr30kRetrievalDataset,

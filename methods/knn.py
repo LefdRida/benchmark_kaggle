@@ -26,11 +26,12 @@ class KNNMethod(AbsMethod):
         support_embeddings: Dict[str, np.ndarray]
         ) -> np.ndarray:
 
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         top1, top5, total = 0.0, 0.0, 0
         train_features = support_embeddings["train_image"]
         train_labels = support_embeddings["train_labels"]
-        train_labels = torch.Tensor(train_labels)
-        train_features = torch.Tensor(train_features)
+        train_labels = torch.Tensor(train_labels).to(device)
+        train_features = torch.Tensor(train_features).to(device)
         train_features = F.normalize(train_features, p=2, dim=1)
 
         num_test_images, num_chunks = data.shape[0], 100
@@ -45,7 +46,7 @@ class KNNMethod(AbsMethod):
 
             #targets = test_labels[idx : min((idx + imgs_per_chunk), num_test_images)]
             batch_size = features.shape[0]
-            features = torch.Tensor(features)
+            features = torch.Tensor(features).to(device)
             features = F.normalize(features, p=2, dim=1)
 
             # calculate the dot product and compute top-k neighbors
@@ -66,7 +67,7 @@ class KNNMethod(AbsMethod):
                 1,
             )
             _, pred = probs.sort(1, True)
-            predictions.append(pred)
+            predictions.append(pred.cpu().numpy())
         return np.concatenate(predictions, axis=0)
     
 
