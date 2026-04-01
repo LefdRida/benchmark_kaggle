@@ -172,10 +172,10 @@ class EmbeddingSpaceAnalysisTask(AbsTask):
 
         #geo_preserve_metric = (1/train_image.shape[0]**2) * np.linalg.norm(train_image@train_image.T  - train_text@train_text.T)**2
         # CuPy version
-        device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
-        train_image = torch.Tensor(train_image).to(device)
-        train_text = torch.Tensor(train_text).to(device)
-        geo_preserve_metric = (1 / train_image.shape[0]**2) * torch.norm(train_image @ train_image.T - train_text @ train_text.T).item()**2
-        print(geo_preserve_metric)
+        #device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
+        #train_image = torch.Tensor(train_image).to(device)
+        #train_text = torch.Tensor(train_text).to(device)
+        #geo_preserve_metric = (1 / train_image.shape[0]**2) * torch.norm(train_image @ train_image.T - train_text @ train_text.T).item()**2
+        #print(geo_preserve_metric)
 
-        return {"geo_preserve_metric": geo_preserve_metric, "image_isoscore": image_isoscore, "text_isoscore": text_isoscore}
+        return {"geo_preserve_metric": 0, "image_isoscore": image_isoscore, "text_isoscore": text_isoscore}
