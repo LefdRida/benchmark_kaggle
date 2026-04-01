@@ -50,7 +50,7 @@ config = {
         "metatask": "retrieval", # only "retrieval"
     },
     "mscoco": {
-        "data_path": "/home/rida.lefdali/work/dataset/coco2017",
+        "data_path": "/kaggle/input/datasets/odddatascience/coco2017",
         "hf_img_embedding_name": "mscoco_dinov2_dinov2-giant_image_embeddings.pkl", 
         "hf_text_embedding_name": "mscoco_gtr_t5_gtr-t5-large_text_embeddings.pkl", 
         "hf_repo_id": "ridalefdali/mscoco_classification_embeddings", #"ridalefdali/mscoco_classification_embeddings"
