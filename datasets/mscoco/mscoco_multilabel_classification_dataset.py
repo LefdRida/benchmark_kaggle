@@ -136,8 +136,8 @@ class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
             )
             self.labels_emb = None
             labels = self.instance_table.select("label").to_series().to_list()
-            #self.labels = [[self.new_idx_mapping[i] for i in x] for x in labels]
-            self.labels = [[self.new_idx_mapping[max(set(x), key=x.count)]] for x in labels]
+            self.labels = [[self.new_idx_mapping[i] for i in x] for x in labels]
+            #self.labels = [[self.new_idx_mapping[max(set(x), key=x.count)]] for x in labels]
             self.load_two_encoder_data(
                 hf_repo_id=task_config.hf_repo_id, 
                 hf_img_embedding_name=task_config.hf_img_embedding_name, 
@@ -189,7 +189,7 @@ class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
             train_text_embeddings = np.concatenate(text_emb, axis=0)
 
         elif self.split == "large" and self.train_idx is not None:
-            train_labels = np.array(self.labels)[self.train_idx]
+            #train_labels = np.array(self.labels)[self.train_idx]
             for idx in self.train_idx:
                 label_list = self.labels[idx]
                 for label_idx in label_list:
@@ -203,7 +203,7 @@ class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
         assert train_image_embeddings.shape[0] == train_text_embeddings.shape[0]
         self.support_embeddings["train_image"] = train_image_embeddings
         self.support_embeddings["train_text"] = train_text_embeddings
-        self.support_embeddings["train_labels"] = train_labels
+        #self.support_embeddings["train_labels"] = train_labels
         
 
     def get_test_data(self):
