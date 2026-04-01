@@ -9,7 +9,7 @@ import torch.nn.functional as F
 class KNNMethod(AbsMethod):
     """ASIF alignment technique."""
     
-    def __init__(self, num_classes: int = 1000, k: int = 20, T: float = 0.07):
+    def __init__(self, num_classes: int = 1000, k: int = 30, T: float = 0.07):
         super().__init__("KNN")
         self.num_classes = num_classes
         self.k = k

@@ -1,11 +1,14 @@
 config = {
-    "tasks": ["imagenet1k", "places365"], # dataset_name
-    "methods": ["asif"],  # Method to use: "asif", "csa", or "cka" "csa", 
+    "tasks": [ "places365"], # dataset_name "imagenet1k",
+    "methods": ["asif", "knn"],  # Method to use: "asif", "csa", or "cka" "csa", 
     "csa":{
         "sim_dim": 700,
     },
     "asif":{
         "non_zeros": 800,
+    },
+    "knn":{
+        "topk": 365,
     },
     "retrieval":{
         "topk": 5,
