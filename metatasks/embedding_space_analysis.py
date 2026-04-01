@@ -22,8 +22,8 @@ class EmbeddingSpaceAnalysisTask(AbsTask):
         train_image = support_embeddings["train_image"]
         train_text = support_embeddings["train_text"]
 
-        image_isoscore = IsoScore(train_image)
-        text_isoscore = IsoScore(train_text)
+        image_isoscore = IsoScore(torch.Tensor(train_image).float())
+        text_isoscore = IsoScore(torch.Tensor(train_text).float())
 
         geo_preserve_metric = (1/train_image.shape[0]**2) * np.linalg.norm(train_image@train_image.T  - train_text@train_text.T)**2
 

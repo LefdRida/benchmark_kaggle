@@ -58,8 +58,8 @@ class ClassificationTask(AbsTask):
             self.ground_truth = torch.Tensor(self.ground_truth)
             predictions = torch.Tensor(predictions)
             correct = predictions.eq(self.ground_truth.view(-1, 1))
-            top1 = top1 + correct.narrow(1, 0, 1).sum().item()
-            top5 = top5 + correct.narrow(1, 0, min(5, k)).sum().item()  # top5 does not make sense if k < 5
+            top1 = correct.narrow(1, 0, 1).sum().item()
+            top5 = correct.narrow(1, 0, min(5, k)).sum().item()  # top5 does not make sense if k < 5
             results = {"top1": top1 / len(predictions), "top5": top5 / len(predictions)}
         else:
             accuracy = metrics.accuracy_score(self.ground_truth.flatten(), predictions.flatten())
