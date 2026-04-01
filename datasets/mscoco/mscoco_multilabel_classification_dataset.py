@@ -189,7 +189,7 @@ class MScocoMultiLabelClassificationDataset(MScoco, EmbeddingDataset):
             train_text_embeddings = np.concatenate(text_emb, axis=0)
 
         elif self.split == "large" and self.train_idx is not None:
-            train_labels = self.labels[self.train_idx]
+            train_labels = np.array(self.labels)[self.train_idx]
             for idx in self.train_idx:
                 label_list = self.labels[idx]
                 for label_idx in label_list:
