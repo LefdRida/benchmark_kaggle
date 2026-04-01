@@ -43,17 +43,30 @@ def test_framework():
                 else:
                     original_ds_split = "test"
                 print(f"Running {task} with {original_ds_split}")
-
-                OmegaConf.update(
-                    config, 
-                    f"{task}.hf_img_embedding_name", 
-                    f"{task}_{original_ds_split}_{img_embedding_model_name}_image_embeddings.pkl"
-                    )
-                OmegaConf.update(
-                    config, 
-                    f"{task}.hf_text_embedding_name", 
-                    f"{task}_{original_ds_split}_{txt_embedding_model_name}_text_embeddings.pkl"
-                    )
+                if task != "mscoco":
+                    OmegaConf.update(
+                        config, 
+                        f"{task}.hf_img_embedding_name", 
+                        f"{task}_{original_ds_split}_{img_embedding_model_name}_image_embeddings.pkl"
+                        )
+                
+                    OmegaConf.update(
+                        config, 
+                        f"{task}.hf_text_embedding_name", 
+                        f"{task}_{original_ds_split}_{txt_embedding_model_name}_text_embeddings.pkl"
+                        )
+                else:
+                    OmegaConf.update(
+                        config, 
+                        f"{task}.hf_img_embedding_name", 
+                        f"{task}_{img_embedding_model_name}_image_embeddings.pkl"
+                        )
+                
+                    OmegaConf.update(
+                        config, 
+                        f"{task}.hf_text_embedding_name", 
+                        f"{task}_{txt_embedding_model_name}_text_embeddings.pkl"
+                        )
                 tasks.append(load_dataset_metatask(task, config))
             
             support_embeddings = None
