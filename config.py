@@ -75,7 +75,7 @@ config = {
         "metatask": "classification", # "classification" or  "retrieval"
     },
     "image_embedding_models": ["dinov2"],
-    "text_embedding_models": ["all_mpnet_base_v2", "gtr_t5", "sentence_t5"], #"alibaba_gte_en_v1_5", "baai_bge_en_v1_5"],
+    "text_embedding_models": ["gtr_t5"], #"alibaba_gte_en_v1_5", "baai_bge_en_v1_5"], , "sentence_t5" "all_mpnet_base_v2",
     "embedding_model": {
         "img_encoder": "dinov2", 
         "text_encoder": "gtr_t5", 

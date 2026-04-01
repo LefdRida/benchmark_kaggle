@@ -54,7 +54,11 @@ class ClassificationTask(AbsTask):
             acc /= len(predictions)
             results = {"accuracy": acc}
         else:
-            accuracy = metrics.accuracy_score(self.ground_truth, predictions)
+            print(type(self.ground_truth))
+            print(predictions.shape)
+            print(self.ground_truth)
+            print(predictions)
+            accuracy = metrics.accuracy_score(self.ground_truth, predictions.numpy().flatten())
             results = {"accuracy": accuracy}
         return results
     
