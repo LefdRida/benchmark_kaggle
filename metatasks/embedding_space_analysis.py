@@ -1,21 +1,11 @@
+from __future__ import unicode_literals
 import numpy as np
 from sklearn import metrics
 from typing import Any, Dict, List
 from base.base import AbsTask, AbsModel, AbsMethod
 import torch
 from IsoScore.IsoScore import *
-# -*- coding: utf-8 -*-
-"""
-GPU-accelerated IsoScore implementation using CuPy.
 
-Drop-in replacement for the CPU version. Falls back to NumPy
-automatically if CuPy is not available.
-
-Input convention (same as original):
-    points : array of shape (num_samples, embedding_dim)
-             i.e. each ROW is one data point.
-"""
-from __future__ import unicode_literals
 
 try:
     import cupy as cp
