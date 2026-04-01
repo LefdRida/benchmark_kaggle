@@ -3,6 +3,7 @@ from typing import Type, Dict, Optional
 from base.base import AbsTask
 from .classification import ClassificationTask
 from .retrieval import RetrievalTask
+from .embedding_space_analysis import EmbeddingSpaceAnalysisTask
 from omegaconf import DictConfig
 
 def _create_classification_task(
@@ -62,9 +63,37 @@ def _create_retrieval_task(
         num_gt=metatask_config.num_gt
     )
 
+
+def _create_embedding_space_analysis_task(
+    dataset_name: str,
+    dataset,
+    metatask_config: DictConfig,
+    support_embeddings: Optional[dict]
+) -> EmbeddingSpaceAnalysisTask:
+    """Helper function to create an embedding space analysis task.
+    
+    Args:
+        dataset_name: Name of the dataset
+        dataset: Dataset instance with embedding space analysis data
+        metatask_config: Configuration object
+        support_embeddings: Optional training embeddings
+        
+    Returns:
+        EmbeddingSpaceAnalysisTask instance
+    """
+    test_img, test_labels = dataset.get_test_data()
+    
+    return EmbeddingSpaceAnalysisTask(
+        name=f"{dataset_name}-EmbeddingSpaceAnalysis",
+        test_images=test_img,
+        support_embeddings = support_embeddings,
+        ground_truth=test_labels,
+    )
+
 _METATASK_REGISTRY: Dict[str, Type[AbsTask]] = {
     "classification": _create_classification_task,
     "retrieval": _create_retrieval_task,
+    "embedding_space_analysis": _create_embedding_space_analysis_task,
 }
 
 
