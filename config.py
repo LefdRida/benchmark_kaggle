@@ -1,5 +1,5 @@
 config = {
-    "tasks": [ "imagenet1k"], # dataset_name "imagenet1k",
+    "tasks": [ "imagenet1k", "places365", "mscoco"], # dataset_name "imagenet1k",
     "methods": ["knn"],  # Method to use: "asif", "csa", or "cka" "csa", 
     "csa":{
         "sim_dim": 700,

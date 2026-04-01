@@ -31,7 +31,7 @@ _IMAGE_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
 _TEXT_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
     # Text Embedding Models
     "sentence_t5": ['sentence-t5-base', 'sentence-t5-large', 'sentence-t5-xl', 'sentence-t5-xxl'],
-    "gtr_t5": ['gtr-t5-base', 'gtr-t5-large', 'gtr-t5-xl', 'gtr-t5-xxl'],
+    "gtr_t5": ['gtr-t5-large'],#['gtr-t5-base', , 'gtr-t5-xl', 'gtr-t5-xxl'],
     "all_mpnet_base_v2": ['all-mpnet-base-v2'],
     "alibaba_gte_en_v1_5": ['gte-base-en-v1.5', 'gte-large-en-v1.5'],
     "baai_bge_en_v1_5": ['bge-base-en-v1.5', 'bge-large-en-v1.5'],
