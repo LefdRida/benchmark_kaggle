@@ -16,6 +16,9 @@ config = {
     },
     "classification":{
     },
+    "embedding_space_analysis":{
+        
+    },
     "support_embeddings": None,
 
     "imagenet1k": {
