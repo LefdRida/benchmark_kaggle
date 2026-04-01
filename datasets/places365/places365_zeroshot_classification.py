@@ -60,10 +60,12 @@ class Places365(DatasetBase):
         self.table = table.sort("label_id")
 
         self.clsidx_to_labels = {}
-        print(len(self.clsidx_to_labels))
         for sample in self.table.select(['label_id', 'label']).unique(maintain_order=True).to_dicts():
             if sample["label_id"] not in self.clsidx_to_labels:
                 self.clsidx_to_labels[sample["label_id"]] = sample["label"]
+                
+        print(len(self.clsidx_to_labels))
+
         
 
 class Places365ZeroshotClassificationDataset(Places365, EmbeddingDataset):
