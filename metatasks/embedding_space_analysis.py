@@ -163,12 +163,16 @@ class EmbeddingSpaceAnalysisTask(AbsTask):
             
         train_image = support_embeddings["train_image"]
         train_text = support_embeddings["train_text"]
-
+        print(train_image.shape)
         image_isoscore = IsoScoreGPU(train_image)
+        print(image_isoscore)
+        print(train_text.shape)
         text_isoscore = IsoScoreGPU(train_text)
+        print(text_isoscore)
 
         #geo_preserve_metric = (1/train_image.shape[0]**2) * np.linalg.norm(train_image@train_image.T  - train_text@train_text.T)**2
         # CuPy version
         geo_preserve_metric = (1 / train_image.shape[0]**2) * float(cp.linalg.norm(train_image @ train_image.T - train_text @ train_text.T)**2)
+        print(geo_preserve_metric)
 
         return {"geo_preserve_metric": geo_preserve_metric, "image_isoscore": image_isoscore, "text_isoscore": text_isoscore}
