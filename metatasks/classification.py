@@ -3,19 +3,20 @@ from sklearn import metrics
 from typing import Any, Dict, List
 from base.base import AbsTask, AbsModel, AbsMethod
 import torch
+from tqdm import tqdm
 class ClassificationTask(AbsTask):
     """Task for zero-shot classification evaluation."""
     
-    def __init__(self, name: str, test_images: np.ndarray, support_embeddings: Dict[str, np.ndarray], ground_truth: np.ndarray):
+    def __init__(self, name: str, test_images: np.ndarray, support_embeddings: Dict[str, np.ndarray], ground_truth: np.ndarray, **kwargs):
         super().__init__(name, "classification")
         self.test_images = test_images         # Images embeddings or raw images
         self.support_embeddings = support_embeddings       # Support images embeddings
         self.ground_truth = ground_truth   # Ground truth labels
+        self.knn = kwargs.get("knn", False)
+        self.multilabel = kwargs.get("multilabel", False)
 
     def run(self, method: AbsMethod, support_embeddings: Dict[str, np.ndarray] = None, **kwargs) -> Dict[str, Any]:
         """Run classification using the provided alignment method."""
-        multilabel = False
-        knn = True
         if support_embeddings is None:
             support_embeddings = self.support_embeddings
             
@@ -39,7 +40,7 @@ class ClassificationTask(AbsTask):
                     y = y / (np.linalg.norm(y, axis=1, keepdims=True) + 1e-10)
                     return np.sum(x * y, axis=1)
             predictions = []
-            for batch in range(0, aligned_image_embeddings.shape[0], 256):
+            for batch in tqdm(range(0, aligned_image_embeddings.shape[0], 256)):
                 #for label_idx in range(aligned_labels.shape[0]):
                 #l_emb = aligned_labels.reshape(1, -1)
                 #l_emb = np.repeat(l_emb, 256, axis=0)
@@ -47,14 +48,7 @@ class ClassificationTask(AbsTask):
                 pred = np.argmax(sim_score_matrix, axis=1)
                 predictions.extend(pred.tolist())       
             
-        if multilabel:
-            acc = 0
-            for idx, pred in enumerate(predictions):
-                if pred in self.ground_truth[idx]:
-                    acc += 1
-            acc /= len(predictions)
-            results = {"accuracy": acc}
-        elif knn:
+        if self.knn:
             k = 30
             self.ground_truth = torch.Tensor(self.ground_truth)
             predictions = torch.Tensor(predictions)
@@ -62,8 +56,18 @@ class ClassificationTask(AbsTask):
             top1 = correct.narrow(1, 0, 1).sum().item()
             top5 = correct.narrow(1, 0, min(5, k)).sum().item()  # top5 does not make sense if k < 5
             results = {"top1": top1 / len(predictions), "top5": top5 / len(predictions)}
+            return results
+
+        if self.multilabel:
+            acc = 0
+            for idx, pred in enumerate(predictions):
+                if pred in self.ground_truth[idx]:
+                    acc += 1
+            acc /= len(predictions)
+            results = {"accuracy": acc}
+        
         else:
-            accuracy = metrics.accuracy_score(self.ground_truth.flatten(), predictions.flatten())
+            accuracy = metrics.accuracy_score(self.ground_truth, predictions)
             results = {"accuracy": accuracy}
         return results
     

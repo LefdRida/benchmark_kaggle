@@ -10,6 +10,7 @@ def _create_classification_task(
     dataset_name: str,
     dataset,
     metatask_config: DictConfig,
+    dataset_config: DictConfig,
     support_embeddings: Optional[dict]
 ) -> ClassificationTask:
     """Helper function to create a classification task.
@@ -31,6 +32,8 @@ def _create_classification_task(
         test_images=test_img,
         support_embeddings = support_embeddings,
         ground_truth=test_labels,
+        knn=dataset_config.knn,
+        multilabel=dataset_config.multilabel
     )
 
 
@@ -38,6 +41,7 @@ def _create_retrieval_task(
     dataset_name: str,
     dataset,
     metatask_config: DictConfig,
+    dataset_config: DictConfig,
     support_embeddings: Optional[dict]
 ) -> RetrievalTask:
     """Helper function to create a retrieval task.

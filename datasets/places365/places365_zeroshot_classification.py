@@ -6,6 +6,7 @@ import polars as pl
 import re
 from sklearn.model_selection import StratifiedShuffleSplit
 
+
 class Places365(DatasetBase):
     def __init__(self, root: str, filelist_places: str,categories_places: str, **kwargs):
         DatasetBase.__init__(self)
@@ -124,7 +125,7 @@ class Places365ZeroshotClassificationDataset(Places365, EmbeddingDataset):
         elif self.split == "large" and self.train_idx is not None:
             train_image_embeddings =  self.image_embeddings[self.train_idx]
             train_labels = self.labels[self.train_idx]
-            sss = StratifiedShuffleSplit(n_splits=1, train_size=35000, random_state=42)
+            sss = StratifiedShuffleSplit(n_splits=1, train_size=400000, random_state=42)
             for i, (train_index, _) in enumerate(sss.split(train_image_embeddings, train_labels)):
                 self.train_idx = train_index
                 

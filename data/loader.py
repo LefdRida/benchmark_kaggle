@@ -68,6 +68,7 @@ def load_dataset_metatask(dataset_name: str, config: DictConfig) -> AbsTask:
             f"{dataset_name_lower}-{dataset_config.metatask}", 
             ds, 
             metatask_config,
+            dataset_config,
             support_embeddings
         )
 

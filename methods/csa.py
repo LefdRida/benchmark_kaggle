@@ -2,7 +2,7 @@ import numpy as np
 from typing import Dict, Any, Optional
 from base.base import AbsMethod
 # Importing from original structure
-from methods.csa_core import NormalizedCCA
+from methods.csa_core import NormalizedCCA, ReNormalizedCCA
 import torch
 import torch.nn.functional as F
 
@@ -12,7 +12,7 @@ class CSAMethod(AbsMethod):
     def __init__(self, sim_dim: int = 512):
         super().__init__("CSA")
         self.sim_dim = sim_dim
-        self.cca = NormalizedCCA(sim_dim=sim_dim)
+        self.cca = ReNormalizedCCA(sim_dim=sim_dim)
         self.fitted = False
 
     def align(self, image_embeddings: np.ndarray, text_embeddings: np.ndarray, support_embeddings: Dict[str, np.ndarray], **kwargs) -> np.ndarray:
@@ -21,18 +21,21 @@ class CSAMethod(AbsMethod):
         """
         if not self.fitted:
             # support_embeddings should have 'train_image' and 'train_text'
+            print(support_embeddings['train_image'].shape)
+            print(support_embeddings['train_text'].shape) 
             self.cca.fit_transform_train_data(
                 support_embeddings['train_image'], 
                 support_embeddings['train_text']
             )
             self.fitted = True
-
+            
         # Transform based on mode
         # Zero mean using training mean
         
         #image_embeddings_centred = image_embeddings - self.cca.traindata1_mean
         #text_embeddings_centred = text_embeddings - self.cca.traindata2_mean
-        
+        print(image_embeddings.shape)
+        print(text_embeddings.shape) 
         # Transform using CCA weights for first modality
         image_embeddings, text_embeddings = self.cca.transform_data(image_embeddings, text_embeddings)
 

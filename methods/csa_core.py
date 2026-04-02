@@ -6,6 +6,7 @@ import joblib
 import numpy as np
 from cca_zoo.linear import CCA
 from typing import Tuple
+from scipy.linalg import sqrtm
 
 def origin_centered(data: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     """Zero-mean the data.
@@ -133,7 +134,7 @@ class ReNormalizedCCA:
         self.traindata2_mean = None
         self.sim_dim = sim_dim
         self.equal_weights = equal_weights
-        self.regularization = 0.01
+        self.regularization = 1e-5
         self.text_rank = None
 
     def fit_transform_train_data(
@@ -142,7 +143,7 @@ class ReNormalizedCCA:
 
         traindata1 = traindata1.astype(np.float32)
         traindata2 = traindata2.astype(np.float32)
-
+        
         traindata1, traindata1_mean = origin_centered(traindata1)
         traindata2, traindata2_mean = origin_centered(traindata2)
 
@@ -160,6 +161,7 @@ class ReNormalizedCCA:
         C22 = (traindata2.T @ traindata2) / len(traindata2)
         eigenvalues = np.linalg.eigvalsh(C22)
         self.text_rank = np.sum(eigenvalues > 1e-6)
+        print(self.text_rank)
 
         # STEP 2: Set CCA dimension
         self.sim_dim = min(self.sim_dim, traindata1.shape[1], traindata2.shape[1])
@@ -174,7 +176,7 @@ class ReNormalizedCCA:
         #     sigma_z2_inv_sqrt = sqrtm(sigma_z2_inv + eps * np.eye(traindata2.shape[1]))
         # else:
         sigma_z1_inv = np.linalg.inv(
-            traindata1.T @ traindata1 + self.regularization * np.eye(traindata1.shape[1])
+            traindata1.T @ traindata1 #+ self.regularization * np.eye(traindata1.shape[1])
         )
         sigma_z2_inv = np.linalg.inv(
             traindata2.T @ traindata2 + self.regularization * np.eye(traindata2.shape[1])
