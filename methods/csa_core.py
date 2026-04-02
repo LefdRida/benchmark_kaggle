@@ -45,12 +45,13 @@ class NormalizedCCA:
             corr_coeff: the correlation coefficient. shape: (dim,)
         """
         # Check the shape of the training data
-    
+        traindata1 = traindata1.astype(np.float32)
+        traindata2 = traindata2.astype(np.float32)
         # zero mean data
+    
         traindata1, traindata1_mean = origin_centered(traindata1)
         traindata2, traindata2_mean = origin_centered(traindata2)
-        print(traindata1.shape)
-        print(traindata2.shape)
+      
         # print(traindata1_mean)
         # print(traindata2_mean)
         self.traindata1_mean, self.traindata2_mean = traindata1_mean, traindata2_mean
@@ -102,7 +103,8 @@ class NormalizedCCA:
         """
         assert self.traindata1_mean is not None, "Please fit the cca model first."
         assert self.traindata2_mean is not None, "Please fit the cca model first."
-
+        data1 = data1.astype(np.float32)
+        data2 = data2.astype(np.float32)
         # zero mean data and transform
         data1 = data1 - self.traindata1_mean
         dummy_data2 = np.zeros((data1.shape[0], data2.shape[1]))
