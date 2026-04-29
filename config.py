@@ -1,6 +1,6 @@
 config = {
     "tasks": ["places365"], # dataset_name "imagenet1k", "mscoco"
-    "methods": ["asif"],  # Method to use: "asif", "csa", or "cka" "csa", 
+    "methods": ["knn"],  # Method to use: "asif", "csa", or "cka" "csa", 
     "csa":{
         "sim_dim": 700,
     },
@@ -8,7 +8,7 @@ config = {
         "non_zeros": 800,
     },
     "knn":{
-        "num_classes": 1000,
+        "num_classes": 365,
     },
     "retrieval":{
         "topk": 5,

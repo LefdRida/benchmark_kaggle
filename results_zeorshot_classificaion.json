@@ -1,1 +1,266 @@
-{"dinov2_dinov2-giant_gtr_t5_gtr-t5-large": {"mscoco-classification-Classification-csa": {"accuracy": 0.9237066515065379}}, "dinov2_dinov2-base_gtr_t5_gtr-t5-large": {"mscoco-classification-Classification-csa": {"accuracy": 0.6220864127345083}}, "dinov2_dinov2-small_gtr_t5_gtr-t5-large": {"mscoco-classification-Classification-csa": {"accuracy": 0.795537237066515}}, "dinov2_dinov2-large_gtr_t5_gtr-t5-large": {"mscoco-classification-Classification-csa": {"accuracy": 0.8451108584422967}}}
+{
+    "dinov2_dinov2-giant_gtr_t5_gtr-t5-large": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.3023539936196718
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.9237066515065379
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.7132666666666667
+        }
+    },
+    "dinov2_dinov2-base_gtr_t5_gtr-t5-large": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.3176227917447573
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.6220864127345083
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.6258
+        }
+    },
+    "dinov2_dinov2-small_gtr_t5_gtr-t5-large": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.2931088019695474
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.795537237066515
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.5776
+        }
+    },
+    "dinov2_dinov2-large_gtr_t5_gtr-t5-large": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.32602331074711943
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.8451108584422967
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.6791333333333334
+        }
+    },
+    "dinov2_dinov2-giant_all_mpnet_base_v2_all-mpnet-base-v2": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.3024889194474325
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.9236782262649232
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.7106
+        }
+    },
+    "dinov2_dinov2-base_all_mpnet_base_v2_all-mpnet-base-v2": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.31774662777845547
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.6219158612848209
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.6241333333333333
+        }
+    },
+    "dinov2_dinov2-small_all_mpnet_base_v2_all-mpnet-base-v2": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.2931790373319434
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.7954235361000569
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.5700666666666667
+        }
+    },
+    "dinov2_dinov2-large_all_mpnet_base_v2_all-mpnet-base-v2": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.3261988991531094
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.8450540079590676
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.6788
+        }
+    },
+    "dinov2_dinov2-giant_sentence_t5_sentence-t5-base": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.3023539936196718
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.9237066515065379
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.7084
+        }
+    },
+    "dinov2_dinov2-base_sentence_t5_sentence-t5-base": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.3176227917447573
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.6220864127345083
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.6221333333333333
+        }
+    },
+    "dinov2_dinov2-small_sentence_t5_sentence-t5-base": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.2931088019695474
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.7955088118249005
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.5674666666666667
+        }
+    },
+    "dinov2_dinov2-large_sentence_t5_sentence-t5-base": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.32602331074711943
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.8450824332006822
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.678
+        }
+    },
+    "dinov2_dinov2-giant_sentence_t5_sentence-t5-large": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.30235029702165095
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.9237066515065379
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.7142
+        }
+    },
+    "dinov2_dinov2-base_sentence_t5_sentence-t5-large": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.3176190951467365
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.6220579874928936
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.6279333333333333
+        }
+    },
+    "dinov2_dinov2-small_sentence_t5_sentence-t5-large": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.2930977121754849
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.7954803865832859
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.5706
+        }
+    },
+    "dinov2_dinov2-large_sentence_t5_sentence-t5-large": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.32602515904612983
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.8450824332006822
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.6826
+        }
+    },
+    "dinov2_dinov2-giant_sentence_t5_sentence-t5-xl": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.3023539936196718
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.9237066515065379
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.7166666666666667
+        }
+    },
+    "dinov2_dinov2-base_sentence_t5_sentence-t5-xl": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.3176246400437677
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.6220864127345083
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.6320666666666667
+        }
+    },
+    "dinov2_dinov2-small_sentence_t5_sentence-t5-xl": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.29310140877350577
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.7955088118249005
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.5758
+        }
+    },
+    "dinov2_dinov2-large_sentence_t5_sentence-t5-xl": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.3260177658500882
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.8450824332006822
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.6845333333333333
+        }
+    },
+    "dinov2_dinov2-giant_sentence_t5_sentence-t5-xxl": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.3023521453206614
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.9237066515065379
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.7139333333333333
+        }
+    },
+    "dinov2_dinov2-base_sentence_t5_sentence-t5-xxl": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.3176227917447573
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.6220579874928936
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.6321333333333333
+        }
+    },
+    "dinov2_dinov2-small_sentence_t5_sentence-t5-xxl": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.29310510537152656
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.7954519613416714
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.5806666666666667
+        }
+    },
+    "dinov2_dinov2-large_sentence_t5_sentence-t5-xxl": {
+        "places365-classification-Classification-csa": {
+            "accuracy": 0.32602331074711943
+        },
+        "mscoco-classification-Classification-csa": {
+            "accuracy": 0.8450824332006822
+        },
+        "imagenet1k-classification-Classification-csa": {
+            "accuracy": 0.6861333333333334
+        }
+    }
+}
