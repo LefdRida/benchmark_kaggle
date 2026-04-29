@@ -25,7 +25,7 @@ _TEXT_EMBEDDING_MODEL_REGISTRY: Dict[str, callable] = {
 _IMAGE_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
     # Image Embedding Models
     "dinov3": ['dinov3-vit7b16-pretrain-lvd1689m', 'dinov3-vith16plus-pretrain-lvd1689m', 'dinov3-vitl16-pretrain-lvd1689m', 'dinov3-vitb16-pretrain-lvd1689m', 'dinov3-vits16-pretrain-lvd1689m'],
-    "dinov2": ['dinov2-giant', 'dinov2-base', 'dinov2-small', 'dinov2-large'],
+    "dinov2": [ 'dinov2-base', 'dinov2-small', 'dinov2-large'],#'dinov2-giant',
 }
 
 _TEXT_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
