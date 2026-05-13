@@ -504,6 +504,8 @@ class CKAMethod(AbsMethod):
                 )
         else:
             diagnostic_results = {}
+            graph              = torch.zeros((n_queries, n_documents), device=self.device)
+        
             for i in tqdm(range(n_queries), desc="[CKA] per-query kNN"):
 
                 b_img, b_txt, _ = select_base_by_knn(
