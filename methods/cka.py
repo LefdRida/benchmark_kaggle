@@ -342,7 +342,6 @@ class CKAMethod(AbsMethod):
         dynamic=False,
         **kwargs
     ):
-        print(n_repeats)
         experiment_name = f"{experiment_name}_{direction}_base--{self.base_mode}_ncusters--{n_clusters}_copy--{copying_exp}_nrepeats--{n_repeats}_translate--{translate}"
         if direction == "i2t":
             train_source = torch.tensor(
