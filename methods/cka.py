@@ -412,14 +412,18 @@ class CKAMethod(AbsMethod):
                 train_images_for_clustering,        
                 n_clusters=n_clusters,#min(self.base_samples, n_train_samples)
             )
-
+            train_target = train_target[base_idx]
+            train_source = train_source[base_idx]
             if copying_exp:
+                
+                
                 random_idx = np.random.choice(base_idx)
                 selected_base_target = train_target[random_idx].unsqueeze(0).repeat(n_repeats, 1)
                 selected_base_source = train_source[random_idx].unsqueeze(0).repeat(n_repeats, 1)
 
                 base_target = torch.cat((base_target[:random_idx], selected_base_target, base_target[random_idx+1:]), dim=0)
                 base_source = torch.cat((base_source[:random_idx], selected_base_source, base_source[random_idx+1:]), dim=0)
+                print(f"[CKAMethod] Base shape: {base_target.shape[0]}, {base_source.shape[0]}")
 
                 if translate:
                     base_source_noise = torch.randn(base_source.size(), device=self.device) * translation_std  + translation_mean
@@ -428,10 +432,7 @@ class CKAMethod(AbsMethod):
                     base_target_noise = torch.randn(base_target.size(), device=self.device) * translation_std  + translation_mean
                     base_target[random_idx:random_idx+n_repeats] += base_target_noise
 
-            else:
-                base_target = train_target[base_idx]
-                base_source = train_source[base_idx]
-                print(f"[CKAMethod] Base shape: {base_target.shape[0]}, {base_source.shape[0]}")
+                
         
             print(f"[CKAMethod] Base mode: clustering ({len(base_idx)} from {n_train_samples})")
         else:

@@ -24,7 +24,7 @@ config = {
         "num_gt": 5,
         'n_clusters': 1750,
         'direction': "i2t",
-        'copying_exp': False,
+        'copying_exp': True,
         'n_repeats': 5,
         'translate': False,
         'translation_std': 0.01,
