@@ -509,12 +509,13 @@ class CKAMethod(AbsMethod):
             for i in tqdm(range(n_queries), desc="[CKA] per-query kNN"):
 
                 b_img, b_txt, _ = select_base_by_knn(
-                    query_image  = test_target[i],
-                    train_images = train_target,
-                    train_texts  = train_source,
+                    query_image  = test_target[i].to(self.device),
+                    train_images = train_target.to(self.device),
+                    train_texts  = train_source.to(self.device),
                     k            = n_clusters,
                 )
-
+                b_txt = b_txt.to(self.device)
+                b_img = b_img.to(self.device)
                 # per-query base CKA
                 graph[i] = self._vectorized_linear_cka_graph(
                     base_source  = b_txt,
