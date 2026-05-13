@@ -417,7 +417,7 @@ class CKAMethod(AbsMethod):
             if copying_exp:
                 
                 
-                random_idx = np.random.choice(base_idx)
+                random_idx = np.random.choice([i for i in range(train_target.shape[0])])
                 selected_base_target = train_target[random_idx].unsqueeze(0).repeat(n_repeats, 1)
                 selected_base_source = train_source[random_idx].unsqueeze(0).repeat(n_repeats, 1)
 
