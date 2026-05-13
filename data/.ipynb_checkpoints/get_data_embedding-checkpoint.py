@@ -5,7 +5,7 @@ from .embed_data import embed_images, embed_text
 from data import get_dataset_class, list_datasets
 from omegaconf import DictConfig
 
-HF_TOKEN = "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"
+HF_TOKEN = None
 
 def get_data_embedding(ds_name:str, task_config: DictConfig, embedding_model_config: DictConfig):
     
