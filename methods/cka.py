@@ -17,6 +17,29 @@ def stretch_representations(repr):
     return repr
 
 
+
+def select_base_by_knn(
+    query_image:  torch.Tensor,
+    train_images: torch.Tensor,
+    train_texts:  torch.Tensor,
+    k:            int,
+) -> tuple:
+    if query_image.dim() == 1:
+        query_image = query_image.unsqueeze(0)
+
+    q_norm = F.normalize(query_image, dim=-1)
+    t_norm = F.normalize(train_images, dim=1)
+    sim    = q_norm @ t_norm.T
+
+    knn_idx = torch.topk(sim, k=k, dim=1).indices.squeeze(0)
+
+    return (
+        train_images[knn_idx],
+        train_texts[knn_idx],
+        knn_idx,
+    )
+
+
 def select_base_by_clustering(embeddings, n_clusters):
 
     device = embeddings.device
@@ -226,7 +249,7 @@ class CKAMethod(AbsMethod):
         test_target  = target_total[n_train:]
        
         train_images_for_clustering = train_target
-
+        
         if self.base_mode == "full":
             base_target = train_target
             base_source = train_source
@@ -261,6 +284,7 @@ class CKAMethod(AbsMethod):
                 base_target = train_target[base_idx]
                 base_source = train_source[base_idx]
             print(f"[CKAMethod] Base mode: clustering ({len(base_idx)} from {n_train})")
+        
         else:
             raise ValueError(f"base_mode must be 'clustering', 'random', or 'full'")
         if self.query_samples == "full":
@@ -315,6 +339,7 @@ class CKAMethod(AbsMethod):
         translation_std=0.01,
         translation_mean=0.0,
         experiment_name="cka_retrieval",
+        dynamic=True,
         **kwargs
     ):
         experiment_name = f"{experiment_name}_{direction}_base--{self.base_mode}_ncusters--{n_clusters}_copy--{copying_exp}_nrepeats--{n_repeats}_translate--{translate}"
@@ -369,7 +394,6 @@ class CKAMethod(AbsMethod):
             train_images_for_clustering = train_source
         
         n_train_samples = train_images_for_clustering.shape[0]
-        print(self.base_mode)
         if self.base_mode == "full":
             base_target = train_target
             base_source = train_source
@@ -412,20 +436,21 @@ class CKAMethod(AbsMethod):
         else:
             raise ValueError(f"base_mode must be 'clustering', 'random', or 'full'")
 
-        run_visualization_kernels(
-            image_embeddings = base_target,
-            text_embeddings= base_source,
-            n_samples        = base_target.shape[0],
-            n_clusters       = 20,
-            save_prefix       = f"{experiment_name}",
-            seed             = 42,
-        )
-
-        diagnostic_results = run_diagnostics(
-            embeddings_text = base_source.cpu().numpy(),
-            embeddings_image = base_target.cpu().numpy(),
-            k = n_clusters
-        )
+        if not dynamic:
+            run_visualization_kernels(
+                image_embeddings = base_target,
+                text_embeddings= base_source,
+                n_samples        = base_target.shape[0],
+                n_clusters       = 20,
+                save_prefix       = f"{experiment_name}",
+                seed             = 42,
+            )
+            
+            diagnostic_results = run_diagnostics(
+                embeddings_text = base_source.cpu().numpy(),
+                embeddings_image = base_target.cpu().numpy(),
+                k = n_clusters
+            )
 
         n_available = test_target.shape[0]
 
@@ -469,14 +494,52 @@ class CKAMethod(AbsMethod):
  
 
         print(f"[CKAMethod] Computing CKA graph ({n_queries} x {n_documents})...")
+        if not dynamic:
+            with torch.no_grad():
+                graph = self._vectorized_linear_cka_graph(
+                    base_source=base_source,
+                    base_target=base_target,
+                    query_source=restricted_source,
+                    query_target=test_target[:n_queries],
+                )
+        else:
+            diagnostic_results = {}
+            for i in tqdm(range(n_queries), desc="[CKA] per-query kNN"):
 
-        with torch.no_grad():
-            graph = self._vectorized_linear_cka_graph(
-                base_source=base_source,
-                base_target=base_target,
-                query_source=restricted_source,
-                query_target=test_target[:n_queries],
-            )
+                b_img, b_txt, _ = select_base_by_knn(
+                    query_image  = test_target[i],
+                    train_images = train_target,
+                    train_texts  = train_source,
+                    k            = n_clusters,
+                )
+
+                # per-query base CKA
+                graph[i] = self._vectorized_linear_cka_graph(
+                    base_source  = b_txt,
+                    base_target  = b_img,
+                    query_source = restricted_source,
+                    query_target = test_target[i:i+1],
+                ).squeeze(0)
+
+                if i == 100:
+                    run_visualization_kernels(
+                        image_embeddings = base_target,
+                        text_embeddings= base_source,
+                        n_samples        = base_target.shape[0],
+                        n_clusters       = 20,
+                        save_prefix       = f"{experiment_name}_query-{i}",
+                        seed             = 42,
+                    )
+                if i in [0, 500, 1000]:  # run diagnostics on a few selected queries
+                    r = run_diagnostics(
+                        embeddings_text = base_source.cpu().numpy(),
+                        embeddings_image = base_target.cpu().numpy(),
+                        k = n_clusters
+                    )
+                    diagnostic_results[f"query_{i}"] = r
+
+                    
+            
 
         graph = graph.detach().cpu().numpy()
 

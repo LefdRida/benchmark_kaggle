@@ -33,7 +33,7 @@ class NoCaps(DatasetBase):
         Returns:
             data table
         """
-        ds = load_dataset("lmms-lab/NoCaps", split="validation", cache_dir="/kaggle/working/")
+        ds = load_dataset("lmms-lab/NoCaps", split="validation", data_files="data/validation-*", cache_dir="/kaggle/working/")
         df = pl.from_arrow(ds.data.table)
 
         # with open(Path(dataset_path) / "nocap_val_4500_captions.json", "r") as f:
