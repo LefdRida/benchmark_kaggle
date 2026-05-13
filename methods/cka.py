@@ -412,14 +412,14 @@ class CKAMethod(AbsMethod):
                 train_images_for_clustering,        
                 n_clusters=n_clusters,#min(self.base_samples, n_train_samples)
             )
-            train_target = train_target[base_idx]
-            train_source = train_source[base_idx]
+            base_target = train_target[base_idx]
+            base_source = train_source[base_idx]
             if copying_exp:
                 
                 
-                random_idx = np.random.choice([i for i in range(train_target.shape[0])])
-                selected_base_target = train_target[random_idx].unsqueeze(0).repeat(n_repeats, 1)
-                selected_base_source = train_source[random_idx].unsqueeze(0).repeat(n_repeats, 1)
+                random_idx = np.random.choice([i for i in range(base_target.shape[0])])
+                selected_base_target = base_target[random_idx].unsqueeze(0).repeat(n_repeats, 1)
+                selected_base_source = base_source[random_idx].unsqueeze(0).repeat(n_repeats, 1)
 
                 base_target = torch.cat((base_target[:random_idx], selected_base_target, base_target[random_idx+1:]), dim=0)
                 base_source = torch.cat((base_source[:random_idx], selected_base_source, base_source[random_idx+1:]), dim=0)
