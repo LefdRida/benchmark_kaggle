@@ -35,7 +35,7 @@ def test_framework():
     #print(f"Running {img_embedding_model_name} with {txt_embedding_model_name}")
     # 2. Create Tasks
     
-    n_clusters = [100, 320, 500, 750, 1000, 1250]#, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250, 3500, 4000]
+    n_clusters = [5, 25, 50, 100, 250, 300, 350, 400, 500, 600, 750]#, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250, 3500, 4000]
     for task in config.tasks:
         #original_ds_split = config.get(f"{task}.original_ds_split")
         # if task == "imagenet1k":
@@ -61,7 +61,7 @@ def test_framework():
             tasks = []
             OmegaConf.update(
                 config, 
-                "retrieval.n_clusters", 
+                "retrieval.n_repeats", 
                 n
                 )
             tasks.append(load_dataset_metatask(task, config))

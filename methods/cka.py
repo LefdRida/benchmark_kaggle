@@ -333,15 +333,16 @@ class CKAMethod(AbsMethod):
         num_gt: int = 5,
         n_clusters: int = 20,
         direction: str = "i2t",
-        copying_exp = False,
+        copying_exp = True,
         n_repeats = 5,
         translate=False,
         translation_std=0.01,
         translation_mean=0.0,
         experiment_name="cka_retrieval",
-        dynamic=True,
+        dynamic=False,
         **kwargs
     ):
+        print(n_repeats)
         experiment_name = f"{experiment_name}_{direction}_base--{self.base_mode}_ncusters--{n_clusters}_copy--{copying_exp}_nrepeats--{n_repeats}_translate--{translate}"
         if direction == "i2t":
             train_source = torch.tensor(

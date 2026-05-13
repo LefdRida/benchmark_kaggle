@@ -15,14 +15,14 @@ config = {
     "cka":{
         'base_samples': 1000, 
         'query_samples': "full", 
-        'base_mode':"full", # "clustering" or "random" or "full"
+        'base_mode':"clustering", # "clustering" or "random" or "full"
         
         
     },
     "retrieval":{
         "topk": 20,
         "num_gt": 5,
-        'n_clusters': 20,
+        'n_clusters': 1750,
         'direction': "i2t",
         'copying_exp': False,
         'n_repeats': 5,
