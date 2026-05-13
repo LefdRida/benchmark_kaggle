@@ -122,7 +122,7 @@ def run_diagnostics(embeddings_text: np.ndarray,
         "erank_ratio_image": [],
     }
  
-    idx = greedy_erank_selection(embeddings_image, k=350)
+    #idx = greedy_erank_selection(embeddings_image, k=350)
     cka_score = linear_CKA(
         torch.tensor(embeddings_text, dtype=torch.float32),
         torch.tensor(embeddings_image, dtype=torch.float32)
