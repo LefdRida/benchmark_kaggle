@@ -84,6 +84,7 @@ class NormalizedCCA:
         self.corr_coeff = corr_coeff
         self.traindata1, self.traindata2 = traindata1, traindata2
         
+        return self.traindata1, self.traindata2
 
     def transform_data(
         self, data1: np.ndarray, data2: np.ndarray

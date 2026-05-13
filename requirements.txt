@@ -6,3 +6,5 @@ huggingface_hub
 polars
 transformers
 sentence-transformers
+git+https://github.com/apple/ml-aim.git#subdirectory=aim-v1
+git+https://github.com/apple/ml-aim.git#subdirectory=aim-v2

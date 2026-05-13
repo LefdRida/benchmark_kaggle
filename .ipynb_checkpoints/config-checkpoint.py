@@ -1,32 +1,65 @@
 config = {
-    "tasks": ["mscoco"], # dataset_name
-    "methods": ["csa", "asif"],  # Method to use: "asif", "csa", or "cka"
+    "tasks": ["nocaps"], # dataset_name
+    "methods": ["cka"],  # Method to use: "asif", "csa", or "cka"
     "csa":{
         "sim_dim": 700,
     },
     "asif":{
         "non_zeros": 800,
     },
+    "cknna":{
+        'base_samples': 1000, 
+        'query_samples': "full", 
+        'base_mode':"full", # "clustering" or "random" or "full"
+    },
+    "cka":{
+        'base_samples': 1000, 
+        'query_samples': "full", 
+        'base_mode':"clustering", # "clustering" or "random" or "full"
+        
+        
+    },
     "retrieval":{
-        "topk": 5,
+        "topk": 20,
         "num_gt": 5,
+        'n_clusters': 20,
+        'direction': "i2t",
+        'copying_exp': False,
+        'n_repeats': 5,
+        'translate': False,
+        'translation_std': 0.01,
+        'translation_mean': 0.0,
+        'experiment_name': "cka_retrieval",
     },
     "classification":{
     },
     "support_embeddings": None,
 
     "imagenet1k": {
-        "root": "/home/rida.lefdali/work/ImageNet/val",
-        "loc_val_solution": "/home/rida.lefdali/work/ImageNet/LOC_val_solution.csv",
-        "loc_synset_mapping": "/home/rida.lefdali/work/ImageNet/LOC_synset_mapping.txt",
+        "root": "/home/rida.lefdali/work/dataset/imagenet1k/val",
+        "loc_val_solution": "/home/rida.lefdali/work/dataset/imagenet1k/LOC_val_solution.csv",
+        "loc_synset_mapping": "/home/rida.lefdali/work/dataset/imagenet1k/LOC_synset_mapping.txt",
         "hf_img_embedding_name": "ImageNet_img_embed_dinov2-giant.pkl", 
-        "hf_text_embedding_name": "ImageNet_text_embed_gtr-t5-large.pkl", 
-        "hf_repo_id": "ridalefdali/ImageNet_embeddings", 
+        "hf_text_embedding_name": "ImageNet_text_embed_all_mpnet_base_v2_all-mpnet-base-v2.pkl", 
+        "hf_repo_id": "ridalefdali/imagenet1k_classification_embeddings", 
         "train_test_ratio": 0.7,
         "seed": 42,
         "split": "large",
+        "original_ds_split": "val",
         "generate_embedding": False,
         "metatask": "classification", # only "classification"
+    },
+    "nocaps": {
+        "dataset_path": "/home/rida.lefdali/work/dataset/nocaps",
+        "hf_img_embedding_name": "nocaps_val_dinov2_dinov2-large_image_embeddings.pkl", 
+        "hf_text_embedding_name": "nocaps_val_gtr_t5_gtr-t5-large_text_embeddings.pkl", 
+        "hf_repo_id": "ridalefdali/nocaps_embeddings", 
+        "train_test_ratio": 0.7,
+        "seed": 42,
+        "split": "large",
+        "original_ds_split": "val",
+        "generate_embedding": False,
+        "metatask": "retrieval", # only "classification"
     },
     "flickr30k": {
         "dataset_path": "/home/rida.lefdali/work/dataset/flickr30k",
@@ -36,26 +69,42 @@ config = {
         "train_test_ratio": 0.7,
         "seed": 42,
         "split": "large",
+        "original_ds_split": "all",
         "num_caption_per_image": 5,
         "num_image_per_caption": 1,
         "generate_embedding": False,
         "metatask": "retrieval", # only "retrieval"
     },
     "mscoco": {
-        "data_path": "/home/rida.lefdali/work/coco2017_dataset/coco2017",
+        "data_path": "/home/rida.lefdali/work/dataset/coco2017",
         "hf_img_embedding_name": "mscoco_dinov2_dinov2-giant_image_embeddings.pkl", 
         "hf_text_embedding_name": "mscoco_gtr_t5_gtr-t5-large_text_embeddings.pkl", 
         "hf_repo_id": "ridalefdali/mscoco_classification_embeddings", #"ridalefdali/mscoco_classification_embeddings"
         "train_test_ratio": 0.7,
         "seed": 42,
         "split": "large",
+        "original_ds_split": "train",
         "num_caption_per_image": 5,
         "num_image_per_caption": 1,
         "generate_embedding": False,
         "metatask": "classification", # "classification" or  "retrieval"
     },
-    "image_embedding_models": ["dinov2"],
-    "text_embedding_models": ["all_mpnet_base_v2", "gtr_t5", "sentence_t5"]#"alibaba_gte_en_v1_5", "baai_bge_en_v1_5"],
+    "places365": {
+        "root": "/home/rida.lefdali/work/dataset/places365_standard/train",
+        "filelist_places": "/home/rida.lefdali/work/dataset/places365/places365_train_standard.txt",
+        "categories_places": "/home/rida.lefdali/work/dataset/places365/categories_places365.txt",
+        "hf_img_embedding_name": "places365_dinov2_dinov2-giant_image_embeddings.pkl", 
+        "hf_text_embedding_name": "places365_gtr_t5_gtr-t5-large_text_embeddings.pkl", 
+        "hf_repo_id": "ridalefdali/places365_classification_embeddings", #"ridalefdali/mscoco_classification_embeddings"
+        "train_test_ratio": 0.7,
+        "seed": 42,
+        "split": "large",
+        "original_ds_split": "train",
+        "generate_embedding": False,
+        "metatask": "classification", # "classification" or  "retrieval"
+    },
+    "image_embedding_models": ["dinov2", "ijepa", "ibot", "mae", ], #, "aim" "google_vit"
+    "text_embedding_models": ["nv_embed", "gtr_t5", "alibaba_gte_en_v1_5", "baai_bge_en_v1_5", "infloat_e5",  "all_mpnet_base_v2", "sentence_t5"], #,,   "qwen3",
     "embedding_model": {
         "img_encoder": "dinov2", 
         "text_encoder": "gtr_t5", 

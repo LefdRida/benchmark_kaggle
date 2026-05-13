@@ -1,1 +1,32 @@
-{"dinov2_dinov2-giant_all_mpnet_base_v2_all-mpnet-base-v2": {"imagenet1k-classification-Classification-csa": {"accuracy": 0.7494833677754816}, "imagenet1k-classification-Classification-asif": 
+{
+    "dinov2_dinov2-giant_gtr_t5_gtr-t5-base": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.0029333333333333334
+        }
+    },
+    "dinov2_dinov2-base_gtr_t5_gtr-t5-base": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.018266666666666667
+        }
+    },
+    "dinov2_dinov2-small_gtr_t5_gtr-t5-base": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.0146
+        }
+    },
+    "dinov2_dinov2-large_gtr_t5_gtr-t5-base": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.0138
+        }
+    },
+    "dinov2_dinov2-giant_gtr_t5_gtr-t5-large": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.0019333333333333333
+        }
+    },
+    "dinov2_dinov2-base_gtr_t5_gtr-t5-large": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.0222
+        }
+    }
+}

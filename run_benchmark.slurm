@@ -4,8 +4,8 @@
 #SBATCH --cpus-per-task=28
 #SBATCH -p gpu
 #SBATCH --gres=gpu:1
-#SBATCH -A SCALABLEML-10V5RWPBSMU-DEFAULT-GPU
-#SBATCH --time=1-00:00:00
+#SBATCH -A SCALABLEML-10V5RWPBSMU-LOW-GPU
+#SBATCH --time=2:00:00
 #SBATCH --job-name run_framework
 #SBATCH --output /home/rida.lefdali/work/run_framework%j.log
 

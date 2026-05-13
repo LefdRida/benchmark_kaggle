@@ -3,9 +3,8 @@ from models import get_image_embedding_model_variant, get_text_embedding_model_v
 from config import config
 from omegaconf import OmegaConf
 
-
 if __name__ == "__main__":
-
+    
     config = OmegaConf.create(config)
     # 1. Run Embeddings
     for task in config.tasks:

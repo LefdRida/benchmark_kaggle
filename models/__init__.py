@@ -10,7 +10,10 @@ _IMAGE_EMBEDDING_MODEL_REGISTRY: Dict[str, callable] = {
     "dinov2": dinov2,
     "google_vit": google_vit,
     "ibot": ibot,
-    "infloat_e5": infloat_e5,
+    "ijepa": ijepa,
+    #"aim": aim,
+    "mae": mae,
+    "google_vit": google_vit,
 }
 
 _TEXT_EMBEDDING_MODEL_REGISTRY: Dict[str, callable] = {
@@ -20,21 +23,32 @@ _TEXT_EMBEDDING_MODEL_REGISTRY: Dict[str, callable] = {
     "all_mpnet_base_v2": all_mpnet_base_v2,
     "alibaba_gte_en_v1_5": alibaba_gte_en_v1_5,
     "baai_bge_en_v1_5": baai_bge_en_v1_5,
+    "infloat_e5": infloat_e5,
+    "nv_embed": nv_embed,
+    "qwen3": qwen3
 }
 
 _IMAGE_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
     # Image Embedding Models
-    "dinov3": ['dinov3-vit7b16-pretrain-lvd1689m', 'dinov3-vith16plus-pretrain-lvd1689m', 'dinov3-vitl16-pretrain-lvd1689m', 'dinov3-vitb16-pretrain-lvd1689m', 'dinov3-vits16-pretrain-lvd1689m'],
+    "dinov3": ['dinov3-vits16-pretrain-lvd1689m', 'dinov3-vitb16-pretrain-lvd1689m','dinov3-vitl16-pretrain-lvd1689m', 'dinov3-vith16plus-pretrain-lvd1689m', 'dinov3-vit7b16-pretrain-lvd1689m'],
     "dinov2": ['dinov2-giant', 'dinov2-base', 'dinov2-small', 'dinov2-large'],
+    "ijepa": ['ijepa_vith14_22k', 'ijepa_vitg16_22k'],
+    "ibot": ['ibot-base', 'ibot-large'],
+    #"aim": ['aim-600M', 'aim-1B', 'aim-3B'],
+    "mae": ['vit-mae-base', 'vit-mae-large'],
+    "google_vit": ['vit-large-patch16-224-in21k', 'vit-base-patch16-224-in21k', 'vit-huge-patch14-224-in21k'],
 }
 
 _TEXT_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
     # Text Embedding Models
     "sentence_t5": ['sentence-t5-base', 'sentence-t5-large', 'sentence-t5-xl', 'sentence-t5-xxl'],
-    "gtr_t5": ['gtr-t5-base', 'gtr-t5-large', 'gtr-t5-xl', 'gtr-t5-xxl'],
+    "gtr_t5": ['gtr-t5-large', 'gtr-t5-base', 'gtr-t5-large', 'gtr-t5-xl', 'gtr-t5-xxl'],
     "all_mpnet_base_v2": ['all-mpnet-base-v2'],
     "alibaba_gte_en_v1_5": ['gte-base-en-v1.5', 'gte-large-en-v1.5'],
     "baai_bge_en_v1_5": ['bge-base-en-v1.5', 'bge-large-en-v1.5'],
+    "infloat_e5": ['e5-small-v2', 'e5-base-v2', 'e5-large-v2'],
+    "nv_embed": ['NV-Embed-v2'],
+    "qwen3": ['Qwen3-Embedding-0.6B', 'Qwen3-Embedding-4B', 'Qwen3-Embedding-8B'],
 }
 
 def get_image_embedding_model(name: str):

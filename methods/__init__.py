@@ -7,12 +7,15 @@ from .asif import ASIFMethod
 from .csa import CSAMethod
 from .cka import CKAMethod
 from .knn import KNNMethod
+from .cknna import CKNNAAMethod
 
 _METHOD_REGISTRY: Dict[str, Type[AbsMethod]] = {
     "asif": ASIFMethod,
     "csa": CSAMethod,
     "cka": CKAMethod,
     "knn": KNNMethod,
+    "cknna": CKNNAAMethod, 
+    
 }
 
 

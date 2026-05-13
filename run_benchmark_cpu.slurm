@@ -16,5 +16,5 @@ module load CUDA/12.6
 conda activate musk_classif
 # Final command
 cd /home/rida.lefdali/work/Alignment_Benchmark
-
+pip install -r requirements.txt
 python run_framework.py

@@ -4,6 +4,8 @@ from typing import Tuple, Any, Dict
 from .dataset_utils import load_embeddings_from_hf
 from sklearn.model_selection import StratifiedShuffleSplit
 import torch
+
+
 def whitening_torch(embeddings):
     mu = torch.mean(embeddings, dim=0, keepdim=True)
     cov = torch.mm((embeddings - mu).t(), embeddings - mu)
@@ -79,18 +81,18 @@ class EmbeddingDataset:
             "Please load the data first."
         assert self.split == "large", "Split must be 'large' to create train/test split."
         
-        #n = self.image_embeddings.shape[0]
+        n = self.image_embeddings.shape[0]
         
-        #arange = np.arange(n)
-        #np.random.seed(seed)
-        #np.random.shuffle(arange)
-        #self.train_idx = arange[:int(n * train_test_ratio)]
-        #self.val_idx = arange[int(n * train_test_ratio):]
+        arange = np.arange(n)
+        np.random.seed(seed)
+        np.random.shuffle(arange)
+        self.train_idx = arange[:int(n * train_test_ratio)]
+        self.val_idx = arange[int(n * train_test_ratio):]
 
-        sss = StratifiedShuffleSplit(n_splits=1, test_size=1-train_test_ratio, random_state=seed)
-        for i, (train_index, test_index) in enumerate(sss.split(self.image_embeddings, self.labels)):
-            self.train_idx = train_index
-            self.val_idx = test_index
+        # sss = StratifiedShuffleSplit(n_splits=1, test_size=1-train_test_ratio, random_state=seed)
+        # for i, (train_index, test_index) in enumerate(sss.split(self.image_embeddings, self.labels)):
+        #     self.train_idx = train_index
+        #     self.val_idx = test_index
 
 
     def set_training_paired_embeddings(self) -> None:

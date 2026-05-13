@@ -59,7 +59,15 @@ def _create_retrieval_task(
         gt_ids=gt_img_ids,
         support_embeddings=support_embeddings,
         topk=metatask_config.topk,
-        num_gt=metatask_config.num_gt
+        num_gt=metatask_config.num_gt,
+        n_clusters=metatask_config.n_clusters,
+        direction=metatask_config.direction,
+        copying_exp=metatask_config.copying_exp,
+        n_repeats=metatask_config.n_repeats,
+        translate=metatask_config.translate,
+        translation_std=metatask_config.translation_std,
+        translation_mean=metatask_config.translation_mean,
+        experiment_name=metatask_config.experiment_name
     )
 
 _METATASK_REGISTRY: Dict[str, Type[AbsTask]] = {

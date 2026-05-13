@@ -8,20 +8,23 @@ from .dataset_base import DatasetBase
 
 # Import dataset classes to register them
 # Using absolute imports to ensure reliability
-from datasets.imagenet1k.imagenet1k_zeroshot_classif_dataset import (
+from my_datasets.imagenet1k.imagenet1k_zeroshot_classif_dataset import (
     Imagenet1kZeroshotClassificationDataset, 
 )
-from datasets.flickr30k.flickr30k_retrieval_dataset import (
+from my_datasets.flickr30k.flickr30k_retrieval_dataset import (
     Flickr30kRetrievalDataset, 
 )
-from datasets.mscoco.mscoco_multilabel_classification_dataset import (
+from my_datasets.mscoco.mscoco_multilabel_classification_dataset import (
     MScocoMultiLabelClassificationDataset, 
     MScocoRetrievalDataset
 )
-from datasets.places365.places365_zeroshot_classification import (
+from my_datasets.places365.places365_zeroshot_classification import (
     Places365ZeroshotClassificationDataset,
 )
 
+from my_datasets.nocaps.nocaps_retrieval_dataset import (
+    NoCapsRetrievalDataset,
+)
 logger = logging.getLogger(__name__)
 
 # Registry dictionary mapping names to classes
@@ -35,13 +38,14 @@ _DATASET_REGISTRY: Dict[str, Type[DatasetBase]] = {
     # Retrieval Datasets
     "flickr30k-retrieval": Flickr30kRetrievalDataset,
     "mscoco-retrieval": MScocoRetrievalDataset,
-
+    "nocaps-retrieval": NoCapsRetrievalDataset,
     # Embedding Generation Datasets (mapped to same classes, logic inside class handles generation mode)
     "imagenet1k-classification-embedding": Imagenet1kZeroshotClassificationDataset,
     "flickr30k-retrieval-embedding": Flickr30kRetrievalDataset,
     "mscoco-retrieval-embedding": MScocoRetrievalDataset,
     "mscoco-classification-embedding": MScocoMultiLabelClassificationDataset,
     "places365-classification-embedding": Places365ZeroshotClassificationDataset,
+    "nocaps-retrieval-embedding": NoCapsRetrievalDataset,
 }
 
 def get_dataset_class(name: str) -> Type[DatasetBase]:

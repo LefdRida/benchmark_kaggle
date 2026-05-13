@@ -1,0 +1,130 @@
+{
+    "dinov2_dinov2-giant_gtr_t5_gtr-t5-base": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.14345710285980934
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.14793333333333333
+        }
+    },
+    "dinov2_dinov2-base_gtr_t5_gtr-t5-base": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.21858542763815744
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.17353333333333334
+        }
+    },
+    "dinov2_dinov2-small_gtr_t5_gtr-t5-base": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.12532497833477768
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.10913333333333333
+        }
+    },
+    "dinov2_dinov2-large_gtr_t5_gtr-t5-base": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.22325178321445238
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.17146666666666666
+        }
+    },
+    "dinov2_dinov2-giant_gtr_t5_gtr-t5-large": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.14912339177388173
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.1564
+        }
+    },
+    "dinov2_dinov2-base_gtr_t5_gtr-t5-large": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.243250449970002
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.18826666666666667
+        }
+    },
+    "dinov2_dinov2-small_gtr_t5_gtr-t5-large": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.1407239517365509
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.1154
+        }
+    },
+    "dinov2_dinov2-large_gtr_t5_gtr-t5-large": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.2487834144390374
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.18753333333333333
+        }
+    },
+    "dinov2_dinov2-giant_gtr_t5_gtr-t5-xl": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.17218852076528232
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.15866666666666668
+        }
+    },
+    "dinov2_dinov2-base_gtr_t5_gtr-t5-xl": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.2585160989267382
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.1892
+        }
+    },
+    "dinov2_dinov2-small_gtr_t5_gtr-t5-xl": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.16118925404973003
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.1212
+        }
+    },
+    "dinov2_dinov2-large_gtr_t5_gtr-t5-xl": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.26631557896140257
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.1856
+        }
+    },
+    "dinov2_dinov2-giant_gtr_t5_gtr-t5-xxl": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.17678821411905873
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.16406666666666667
+        }
+    },
+    "dinov2_dinov2-base_gtr_t5_gtr-t5-xxl": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.2656489567362176
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.18646666666666667
+        }
+    },
+    "dinov2_dinov2-small_gtr_t5_gtr-t5-xxl": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.16352243183787749
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.121
+        }
+    },
+    "dinov2_dinov2-large_gtr_t5_gtr-t5-xxl": {
+        "imagenet1k-classification-Classification-cka": {
+            "accuracy": 0.26831544563695753
+        },
+        "places365-classification-Classification-cka": {
+            "accuracy": 0.18186666666666668
+        }
+    }
+}
