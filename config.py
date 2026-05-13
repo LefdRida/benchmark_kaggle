@@ -1,5 +1,5 @@
 config = {
-    "tasks": ["flickr30k"], # dataset_name
+    "tasks": ["nocaps"], # dataset_name
     "methods": ["cka"],  # Method to use: "asif", "csa", or "cka"
     "csa":{
         "sim_dim": 700,
