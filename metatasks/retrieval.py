@@ -22,7 +22,7 @@ class RetrievalTask(AbsTask):
         gt_ids: np.ndarray,
         support_embeddings: Dict[str, np.ndarray] = None,
         topk: int = 10,
-        num_gt: int = 5,
+        num_gt: int = 10,
         direction: str = "i2t",       # "i2t" or "t2i"
         metric_mode: str = "completeness",  # "completeness" (num_gt=5) or "binary" (num_gt=1)
         n_clusters: int = 20,
