@@ -114,5 +114,3 @@ def get_data_embedding(ds_name:str, task_config: DictConfig, embedding_model_con
         else:
             print(f"Embeddings for {ds_name} already exist in {repo_id}")
 
-
-
