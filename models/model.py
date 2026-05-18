@@ -594,6 +594,7 @@ def clip_img(
                     image = img_file.convert("RGB")
                     images.append(preprocess(image))
             else:
+                print(img_files[i])
                 raise ValueError("Unsupported image format")
 
             batch = torch.stack(images).to(device)
