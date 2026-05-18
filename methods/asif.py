@@ -23,45 +23,70 @@ class ASIFMethod(AbsMethod):
         gt_ids: np.ndarray,
         documents: np.ndarray,
         support_embeddings: Dict[str, np.ndarray],
-        topk: int = 5,
-        num_gt: int = 1,
+        topk: int = 20,
+        num_gt: int = 10,
+        direction: str = "i2t",
         **kwargs
     ) -> np.ndarray:
         assert topk >= num_gt, "topk should be more than num_gt"
 
         assert len(gt_ids) == len(queries), "gt_ids and documents should have the same number of samples"
-        non_zeros = min(self.non_zeros, support_embeddings['train_image'].shape[0])
-        range_anch = [
-            2**i
-            for i in range(
-                int(np.log2(non_zeros) + 1),
-                int(np.log2(len(support_embeddings['train_image'][:111240]))) + 2,
+        if direction == "i2t":
+            non_zeros = min(self.non_zeros, support_embeddings['train_image'].shape[0])
+            range_anch = [
+                2**i
+                for i in range(
+                    int(np.log2(non_zeros) + 1),
+                    int(np.log2(len(support_embeddings['train_image']))) + 2,
+                )
+            ]
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            range_anch = range_anch[-1:]  # run just last anchor to be quick
+            val_labels = torch.zeros((1,), dtype=torch.float32)
+            _, _, sim_score_matrix = self.similarity_function(
+                torch.tensor(queries[:9535], dtype=torch.float32).to(device),
+                torch.tensor(documents[:47675], dtype=torch.float32).to(device),
+                torch.tensor(support_embeddings['train_image'], dtype=torch.float32).to(device),
+                torch.tensor(support_embeddings['train_text'], dtype=torch.float32).to(device),
+                val_labels,
+                non_zeros,
+                range_anch,
+                self.val_exps,
+                max_gpu_mem_gb=self.max_gpu_mem_gb,
             )
-        ]
-        print(support_embeddings['train_image'].shape)
-        print(support_embeddings['train_text'].shape)
-        print(queries.shape)
-        print(documents.shape)
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        range_anch = range_anch[-1:]  # run just last anchor to be quick
-        val_labels = torch.zeros((1,), dtype=torch.float32)
-        _, _, sim_score_matrix = self.similarity_function(
-            torch.tensor(queries[:9535], dtype=torch.float32).to(device),
-            torch.tensor(documents[:47675], dtype=torch.float32).to(device),
-            torch.tensor(support_embeddings['train_image'][:111240], dtype=torch.float32).to(device),
-            torch.tensor(support_embeddings['train_text'][:111240], dtype=torch.float32).to(device),
-            val_labels,
-            non_zeros,
-            range_anch,
-            self.val_exps,
-            max_gpu_mem_gb=self.max_gpu_mem_gb,
-        )
+
+        else:
+            non_zeros = min(self.non_zeros, support_embeddings['train_text'].shape[0])
+            range_anch = [
+                2**i
+                for i in range(
+                    int(np.log2(non_zeros) + 1),
+                    int(np.log2(len(support_embeddings['train_text']))) + 2,
+                )
+            ]
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            range_anch = range_anch[-1:]  # run just last anchor to be quick
+            val_labels = torch.zeros((1,), dtype=torch.float32)
+            _, _, sim_score_matrix = self.similarity_function(
+                torch.tensor(queries[:9535], dtype=torch.float32).to(device),
+                torch.tensor(documents[:47675], dtype=torch.float32).to(device),
+                torch.tensor(support_embeddings['train_text'], dtype=torch.float32).to(device),
+                torch.tensor(support_embeddings['train_image'], dtype=torch.float32).to(device),
+                val_labels,
+                non_zeros,
+                range_anch,
+                self.val_exps,
+                max_gpu_mem_gb=self.max_gpu_mem_gb,
+            )
+        
+
+
         sim_score_matrix = sim_score_matrix.numpy().astype(np.float32)
 
         
         self.sim_scores = []
         self.all_hit = []
-        for idx in range(queries[:9535].shape[0]):
+        for idx in range(queries.shape[0]):
             gt_query_ids = gt_ids[idx]
             sim_score = sim_score_matrix[idx, :]
             sim_top_idx = np.argpartition(sim_score, -topk)[-topk :]
