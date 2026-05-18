@@ -61,7 +61,7 @@ class ASIFMethod(AbsMethod):
                 2**i
                 for i in range(
                     int(np.log2(non_zeros) + 1),
-                    int(np.log2(len(support_embeddings['train_text']))) + 2,
+                    int(np.log2(len(support_embeddings['train_image']))) + 2,
                 )
             ]
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
