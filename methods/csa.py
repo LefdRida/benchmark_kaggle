@@ -34,8 +34,8 @@ class CSAMethod(AbsMethod):
         #text_embeddings_centred = text_embeddings - self.cca.traindata2_mean
         
         # Transform using CCA weights for first modality
-        dummy_image_embeddings = np.zeros_like((text_embeddings.shape[0], image_embeddings.shape[1]))
-        dummy_text_embeddings = np.zeros_like((image_embeddings.shape[0], text_embeddings.shape[1]))
+        dummy_image_embeddings = np.zeros((text_embeddings.shape[0], image_embeddings.shape[1]))
+        dummy_text_embeddings = np.zeros((image_embeddings.shape[0], text_embeddings.shape[1]))
         print(dummy_image_embeddings.shape, dummy_text_embeddings.shape)
         image_embeddings, _ = self.cca.transform_data(image_embeddings, dummy_text_embeddings)
         _, text_embeddings = self.cca.transform_data(dummy_image_embeddings, text_embeddings)
