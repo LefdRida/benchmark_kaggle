@@ -580,8 +580,8 @@ def clip_img(
         for i in tqdm(range(0, len(img_files), batch_size)):
             batch = []
             images = []
-            if isinstance(img_files[i]['bytes'], (bytes, bytearray)):
-
+            if isinstance(img_files[i], dict) and isinstance(img_files[i].get("bytes", None), (bytes, bytearray)):
+                print(type(img_files[i]))
                 for img_file in img_files[i : i + batch_size]:    
                     image = Image.open(BytesIO(img_file['bytes'])).convert("RGB")
                     images.append(preprocess(image))
