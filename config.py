@@ -23,7 +23,7 @@ config = {
         "topk": 20,
         "num_gt": 10,
         'n_clusters': 1500,
-        'direction': "t2i",
+        'direction': "i2t",
         'copying_exp': False,
         'n_repeats': 5,
         'translate': False,
