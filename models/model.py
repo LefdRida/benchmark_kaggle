@@ -579,18 +579,23 @@ def clip_img(
     with torch.no_grad():
         for i in tqdm(range(0, len(img_files), batch_size)):
             batch = []
-
-            for img_file in img_files[i: i + batch_size]:
-                if isinstance(img_file, (str, Path)):
+            images = []
+            if isinstance(img_files[i]["bytes"], (bytes, bytearray)):
+                for img_file in img_files[i : i + batch_size]:    
+                    image = Image.open(BytesIO(img_file["bytes"])).convert("RGB")
+                    images.append(preprocess(image))
+            if isinstance(img_files[i], (str, Path)):
+                for img_file in img_files[i : i + batch_size]:
                     image = Image.open(img_file).convert("RGB")
-                elif isinstance(img_file, Image.Image):
+                    images.append(preprocess(image))
+            elif isinstance(img_files[i], Image.Image):
+                for img_file in img_files[i : i + batch_size]:
                     image = img_file.convert("RGB")
-                else:
-                    raise ValueError("Unsupported image format")
+                    images.append(preprocess(image))
+            else:
+                raise ValueError("Unsupported image format")
 
-                batch.append(preprocess(image))
-
-            batch = torch.stack(batch).to(device)
+            batch = torch.stack(images).to(device)
 
             with torch.amp.autocast(device_type=device):
                 features = model.encode_image(batch)
