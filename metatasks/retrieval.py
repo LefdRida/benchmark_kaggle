@@ -180,7 +180,7 @@ class RetrievalTask(AbsTask):
                 "R@5":  float(np.mean(all_r5)),
                 "R@10": float(np.mean(all_r10)),
                 "MRR":  float(np.mean(all_mrr)),
-            }
+            }, diagnostic_results
 
         else:
             # Completeness metrics — Recall@k, MAP, MRR, NDCG  (num_gt=5)
