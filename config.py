@@ -10,12 +10,12 @@ config = {
     "cknna":{
         'base_samples': 1000, 
         'query_samples': "full", 
-        'base_mode':"clustering", # "clustering" or "random" or "full"
+        'base_mode':"full", # "clustering" or "random" or "full"
     },
     "cka":{
         'base_samples': 1000, 
         'query_samples': "full", 
-        'base_mode':"clustering", # "clustering" or "random" or "full"
+        'base_mode':"full", # "clustering" or "random" or "full"
         
         
     },
