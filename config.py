@@ -22,7 +22,7 @@ config = {
     },
     "retrieval":{
         "topk": 20,
-        "num_gt": 1,
+        "num_gt": 10,
         'n_clusters': 1500,
         'direction': "i2t",
         'copying_exp': False,
