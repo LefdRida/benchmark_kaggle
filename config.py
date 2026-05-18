@@ -1,6 +1,6 @@
 config = {
     "tasks": ["nocaps"], # dataset_name
-    "methods": ["asif"],  # Method to use: "asif", "csa", or "cka"
+    "methods": ["clip"],  # Method to use: "asif", "csa", or "cka"
     "csa":{
         "sim_dim": 700,
     },
@@ -52,14 +52,14 @@ config = {
     },
     "nocaps": {
         "dataset_path": "/kaggle/working/",
-        "hf_img_embedding_name": "nocaps_val_dinov2_dinov2-giant_image_embeddings.pkl", 
-        "hf_text_embedding_name": "nocaps_val_gtr_t5_gtr-t5-large_text_embeddings.pkl", 
+        "hf_img_embedding_name": "nocaps_val_clip_ViT-L-14_image_embeddings.pkl", 
+        "hf_text_embedding_name": "nocaps_val_clip_ViT-L-14_text_embeddings.pkl", 
         "hf_repo_id": "ridalefdali/nocaps_embeddings", 
         "train_test_ratio": 0.7,
         "seed": 42,
         "split": "large",
         "original_ds_split": "val",
-        "generate_embedding": True,
+        "generate_embedding": False,
         "metatask": "retrieval", # only "classification"
     },
     "flickr30k": {
