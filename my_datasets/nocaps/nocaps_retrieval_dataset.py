@@ -166,3 +166,4 @@ class NoCapsRetrievalDataset(NoCaps, EmbeddingDataset):
 
     def get_support_embeddings(self):
         return self.support_embeddings
+
