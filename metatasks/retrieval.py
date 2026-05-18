@@ -87,7 +87,7 @@ class RetrievalTask(AbsTask):
         # ============================================================
 
         if hasattr(method, 'retrieve'):
-            all_hits, diagnostic_results = method.retrieve(
+            all_hits = method.retrieve(
                 queries_in,
                 gt_ids_in,
                 documents_in,
@@ -180,7 +180,7 @@ class RetrievalTask(AbsTask):
                 "R@5":  float(np.mean(all_r5)),
                 "R@10": float(np.mean(all_r10)),
                 "MRR":  float(np.mean(all_mrr)),
-            }, diagnostic_results
+            }
 
         else:
             # Completeness metrics — Recall@k, MAP, MRR, NDCG  (num_gt=5)
@@ -218,4 +218,4 @@ class RetrievalTask(AbsTask):
                 "MAP":       float(np.mean(all_ap)),
                 "MRR":       float(np.mean(all_mrr)),
                 "NDCG":      float(np.mean(all_ndcg)),
-            }, diagnostic_results
+            }

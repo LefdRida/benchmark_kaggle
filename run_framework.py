@@ -82,7 +82,7 @@ def test_framework():
             print("Benchmark created")
             # 5. Run Benchmark
             print("Running Benchmark")
-            results, diagnostic_results = benchmark.run(model=None, support_embeddings=support_embeddings)
+            results = benchmark.run(model=None, support_embeddings=support_embeddings)
             #rich.print(f"Finished running {img_embedding_model_name} with {txt_embedding_model_name} and n_clusters={n}")
             rich.print(f"Results:", results)
                     #rich.print(f"Diagnostic Results:", diagnostic_results)
