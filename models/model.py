@@ -582,7 +582,7 @@ def clip_img(
             images = []
             if isinstance(img_files[i], (bytes, bytearray)):
                 for img_file in img_files[i : i + batch_size]:    
-                    image = Image.open(BytesIO(img_file["bytes"])).convert("RGB")
+                    image = Image.open(BytesIO(img_file)).convert("RGB")
                     images.append(preprocess(image))
             if isinstance(img_files[i], (str, Path)):
                 for img_file in img_files[i : i + batch_size]:
