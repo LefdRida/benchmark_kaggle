@@ -68,8 +68,8 @@ class NoCapsRetrievalDataset(NoCaps, EmbeddingDataset):
         NoCaps.__init__(self, dataset_path=task_config.dataset_path)
         
         self.image_paths = self.nocaps["image"].to_list() #self.nocaps.select("coco_url").to_series().to_list()
-        #self.nocaps = self.nocaps.explode("annotations_captions").sort("annotations_ids", descending=False)
         if task_config.generate_embedding:
+            self.nocaps = self.nocaps.explode("annotations_captions").sort("annotations_ids", descending=False)
             self.captions = self.nocaps.select("annotations_captions").to_series().to_list()
         else:
             EmbeddingDataset.__init__(

@@ -8,6 +8,7 @@ from .csa import CSAMethod
 from .cka import CKAMethod
 from .knn import KNNMethod
 from .cknna import CKNNAAMethod
+from .clip import CLIPMethod
 
 _METHOD_REGISTRY: Dict[str, Type[AbsMethod]] = {
     "asif": ASIFMethod,
@@ -15,6 +16,7 @@ _METHOD_REGISTRY: Dict[str, Type[AbsMethod]] = {
     "cka": CKAMethod,
     "knn": KNNMethod,
     "cknna": CKNNAAMethod, 
+    "clip": CLIPMethod
     
 }
 
