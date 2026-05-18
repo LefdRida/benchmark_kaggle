@@ -146,6 +146,7 @@ class RetrievalTask(AbsTask):
 
                 hit = np.zeros(self.topk)
                 for jj, top_idx in enumerate(sim_top_idx):
+                    print(top_idx, gt_query_ids)
                     hit[jj] = 1 if top_idx in gt_query_ids else 0
 
                 all_hits.append(hit)
