@@ -7,7 +7,7 @@ config = {
     "asif":{
         "non_zeros": 800,
     },
-    "clip":{}:
+    "clip":{},
     "cknna":{
         'base_samples': 1000, 
         'query_samples': "full", 
