@@ -102,7 +102,7 @@ class NoCapsRetrievalDataset(NoCaps, EmbeddingDataset):
             "Each image should have a corresponding list of labels."
         assert self.train_idx is not None or self.split=="train", \
             "Please get the train/test split index first."
-        representatif_caption = True
+        representatif_caption = False
         text_emb = []
         image_emb = []
         if self.split == "train":
