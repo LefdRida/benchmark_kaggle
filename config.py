@@ -21,7 +21,7 @@ config = {
     },
     "retrieval":{
         "topk": 20,
-        "num_gt": 10,
+        "num_gt": 1,
         'n_clusters': 1500,
         'direction': "t2i",
         'copying_exp': False,

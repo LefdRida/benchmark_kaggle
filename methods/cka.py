@@ -330,7 +330,7 @@ class CKAMethod(AbsMethod):
         documents: np.ndarray = None,
         support_embeddings=None,
         topk: int = 20,
-        num_gt: int = 10,
+        num_gt: int = 1,
         n_clusters: int = 20,
         direction: str = "i2t",
         copying_exp = False,
