@@ -439,20 +439,20 @@ class CKAMethod(AbsMethod):
             raise ValueError(f"base_mode must be 'clustering', 'random', or 'full'")
 
         if not dynamic:
-            run_visualization_kernels(
-                image_embeddings = base_target,
-                text_embeddings= base_source,
-                n_samples        = base_target.shape[0],
-                n_clusters       = 20,
-                save_prefix       = f"{experiment_name}",
-                seed             = 42,
-            )
+            # run_visualization_kernels(
+            #     image_embeddings = base_target,
+            #     text_embeddings= base_source,
+            #     n_samples        = base_target.shape[0],
+            #     n_clusters       = 20,
+            #     save_prefix       = f"{experiment_name}",
+            #     seed             = 42,
+            # )
             
-            diagnostic_results = run_diagnostics(
-                embeddings_text = base_source.cpu().numpy(),
-                embeddings_image = base_target.cpu().numpy(),
-                k = n_clusters
-            )
+            diagnostic_results = None#run_diagnostics(
+            #     embeddings_text = base_source.cpu().numpy(),
+            #     embeddings_image = base_target.cpu().numpy(),
+            #     k = n_clusters
+            # )
 
         n_available = test_target.shape[0]
 
