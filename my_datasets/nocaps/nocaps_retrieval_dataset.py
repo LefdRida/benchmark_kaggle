@@ -11,6 +11,14 @@ from datasets import load_dataset
 from PIL import Image
 import io
 
+
+def closest_to_centroid(embeddings):
+    """Return the embedding closest to the centroid of the set."""
+    embeddings = np.array(embeddings)
+    centroid = embeddings.mean(axis=0)
+    distances = np.linalg.norm(embeddings - centroid, axis=1)
+    return embeddings[np.argmin(distances)]
+
 class NoCaps(DatasetBase):
     def __init__(self, dataset_path: str):
         super().__init__()
@@ -33,7 +41,7 @@ class NoCaps(DatasetBase):
         Returns:
             data table
         """
-        ds = load_dataset("lmms-lab/NoCaps", split="validation", cache_dir="/kaggle/working/")
+        ds = load_dataset("lmms-lab/NoCaps", split="validation", cache_dir="/home/rida.lefdali/work/dataset/nocaps")
         df = pl.from_arrow(ds.data.table)
 
         # with open(Path(dataset_path) / "nocap_val_4500_captions.json", "r") as f:
@@ -94,7 +102,7 @@ class NoCapsRetrievalDataset(NoCaps, EmbeddingDataset):
             "Each image should have a corresponding list of labels."
         assert self.train_idx is not None or self.split=="train", \
             "Please get the train/test split index first."
-        
+        representatif_caption = True
         text_emb = []
         image_emb = []
         if self.split == "train":
@@ -114,10 +122,15 @@ class NoCapsRetrievalDataset(NoCaps, EmbeddingDataset):
                 image_ids = self.img_caption_mapping[idx]["image_id"]
                 caption_ids = self.img_caption_mapping[idx]["annotations_ids"]
                 caption_emb = self.text_embeddings[caption_ids].reshape(len(caption_ids), -1)
-                text_emb.append(caption_emb)
-                image_emb.append(
-                    np.repeat(self.image_embeddings[image_ids].reshape(1, -1), len(caption_ids), axis=0)
-                    )
+                if representatif_caption:
+                    closest_to_centroid_emb = closest_to_centroid(caption_emb)
+                    text_emb.append(closest_to_centroid_emb.reshape(1, -1))
+                    image_emb.append(self.image_embeddings[image_ids].reshape(1, -1))
+                else:
+                    text_emb.append(caption_emb)
+                    image_emb.append(
+                        np.repeat(self.image_embeddings[image_ids].reshape(1, -1), len(caption_ids), axis=0)
+                        )
             train_image_embeddings = np.concatenate(image_emb, axis=0)
             train_text_embeddings = np.concatenate(text_emb, axis=0)
         else:
@@ -166,4 +179,3 @@ class NoCapsRetrievalDataset(NoCaps, EmbeddingDataset):
 
     def get_support_embeddings(self):
         return self.support_embeddings
-
