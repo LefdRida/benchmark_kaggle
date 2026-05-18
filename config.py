@@ -51,8 +51,8 @@ config = {
     },
     "nocaps": {
         "dataset_path": "/kaggle/working/",
-        "hf_img_embedding_name": "nocaps_val_dinov2_dinov2-large_image_embeddings.pkl", 
-        "hf_text_embedding_name": "nocaps_val_nv_embed_NV-Embed-v2_text_embeddings.pkl", 
+        "hf_img_embedding_name": "nocaps_val_dinov2_dinov2-giant_image_embeddings.pkl", 
+        "hf_text_embedding_name": "nnocaps_val_gtr_t5_gtr-t5-large_text_embeddings.pkl", 
         "hf_repo_id": "ridalefdali/nocaps_embeddings", 
         "train_test_ratio": 0.7,
         "seed": 42,
