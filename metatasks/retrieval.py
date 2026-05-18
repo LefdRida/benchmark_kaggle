@@ -145,8 +145,9 @@ class RetrievalTask(AbsTask):
                 ).indices.cpu().numpy()
 
                 hit = np.zeros(self.topk)
+                print(sim_top_idx.shape)
                 for jj, top_idx in enumerate(sim_top_idx):
-                    print(top_idx, gt_query_ids)
+                    print(top_idx.shape, gt_query_ids.shape)
                     hit[jj] = 1 if top_idx in gt_query_ids else 0
 
                 all_hits.append(hit)
