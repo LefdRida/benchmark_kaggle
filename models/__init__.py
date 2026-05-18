@@ -30,13 +30,13 @@ _TEXT_EMBEDDING_MODEL_REGISTRY: Dict[str, callable] = {
 
 _IMAGE_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
     # Image Embedding Models
-    "dinov3": ['dinov3-vits16-pretrain-lvd1689m', 'dinov3-vitb16-pretrain-lvd1689m','dinov3-vitl16-pretrain-lvd1689m', 'dinov3-vith16plus-pretrain-lvd1689m', 'dinov3-vit7b16-pretrain-lvd1689m'],
+    #"dinov3": ['dinov3-vits16-pretrain-lvd1689m', 'dinov3-vitb16-pretrain-lvd1689m','dinov3-vitl16-pretrain-lvd1689m', 'dinov3-vith16plus-pretrain-lvd1689m', 'dinov3-vit7b16-pretrain-lvd1689m'],
     "dinov2": ['dinov2-giant', 'dinov2-base', 'dinov2-small', 'dinov2-large'],
     "ijepa": ['ijepa_vith14_22k', 'ijepa_vitg16_22k'],
     "ibot": ['ibot-base', 'ibot-large'],
     #"aim": ['aim-600M', 'aim-1B', 'aim-3B'],
-    "mae": ['vit-mae-base', 'vit-mae-large'],
-    "google_vit": ['vit-large-patch16-224-in21k', 'vit-base-patch16-224-in21k', 'vit-huge-patch14-224-in21k'],
+    "mae": ['vit-mae-base', 'vit-mae-large', 'vit-mae-huge'],
+    #"google_vit": ['vit-large-patch16-224-in21k', 'vit-base-patch16-224-in21k', 'vit-huge-patch14-224-in21k'],
 }
 
 _TEXT_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
@@ -48,7 +48,7 @@ _TEXT_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
     "baai_bge_en_v1_5": ['bge-base-en-v1.5', 'bge-large-en-v1.5'],
     "infloat_e5": ['e5-small-v2', 'e5-base-v2', 'e5-large-v2'],
     "nv_embed": ['NV-Embed-v2'],
-    "qwen3": ['Qwen3-Embedding-0.6B', 'Qwen3-Embedding-4B', 'Qwen3-Embedding-8B'],
+    #"qwen3": ['Qwen3-Embedding-0.6B', 'Qwen3-Embedding-4B', 'Qwen3-Embedding-8B'],
 }
 
 def get_image_embedding_model(name: str):
