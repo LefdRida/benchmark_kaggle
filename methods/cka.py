@@ -333,7 +333,7 @@ class CKAMethod(AbsMethod):
         num_gt: int = 10,
         n_clusters: int = 20,
         direction: str = "i2t",
-        copying_exp = True,
+        copying_exp = False,
         n_repeats = 5,
         translate=False,
         translation_std=0.01,
@@ -409,7 +409,8 @@ class CKAMethod(AbsMethod):
         elif self.base_mode == "clustering":
             base_idx    = select_base_by_clustering(
                 train_images_for_clustering,        
-                n_clusters=n_clusters,#min(self.base_samples, n_train_samples)
+                n_clusters=n_clusters,
+                #min(self.base_samples, n_train_samples)
             )
             base_target = train_target[base_idx]
             base_source = train_source[base_idx]
