@@ -58,7 +58,7 @@ config = {
         "seed": 42,
         "split": "large",
         "original_ds_split": "val",
-        "generate_embedding": False,
+        "generate_embedding": True,
         "metatask": "retrieval", # only "classification"
     },
     "flickr30k": {

@@ -14,6 +14,7 @@ _IMAGE_EMBEDDING_MODEL_REGISTRY: Dict[str, callable] = {
     #"aim": aim,
     "mae": mae,
     "google_vit": google_vit,
+    "clip": clip_img
 }
 
 _TEXT_EMBEDDING_MODEL_REGISTRY: Dict[str, callable] = {
@@ -25,7 +26,8 @@ _TEXT_EMBEDDING_MODEL_REGISTRY: Dict[str, callable] = {
     "baai_bge_en_v1_5": baai_bge_en_v1_5,
     "infloat_e5": infloat_e5,
     "nv_embed": nv_embed,
-    "qwen3": qwen3
+    "qwen3": qwen3,
+    "clip": clip_text
 }
 
 _IMAGE_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
@@ -37,6 +39,7 @@ _IMAGE_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
     #"aim": ['aim-600M', 'aim-1B', 'aim-3B'],
     "mae": ['vit-mae-base', 'vit-mae-large', 'vit-mae-huge'],
     #"google_vit": ['vit-large-patch16-224-in21k', 'vit-base-patch16-224-in21k', 'vit-huge-patch14-224-in21k'],
+    "clip": ["ViT-L-14"]
 }
 
 _TEXT_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
@@ -48,6 +51,7 @@ _TEXT_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
     "baai_bge_en_v1_5": ['bge-base-en-v1.5', 'bge-large-en-v1.5'],
     "infloat_e5": ['e5-small-v2', 'e5-base-v2', 'e5-large-v2'],
     "nv_embed": ['NV-Embed-v2'],
+    "clip": ["ViT-L-14"]
     #"qwen3": ['Qwen3-Embedding-0.6B', 'Qwen3-Embedding-4B', 'Qwen3-Embedding-8B'],
 }
 
