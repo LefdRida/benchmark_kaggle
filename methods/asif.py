@@ -44,8 +44,8 @@ class ASIFMethod(AbsMethod):
             range_anch = range_anch[-1:]  # run just last anchor to be quick
             val_labels = torch.zeros((1,), dtype=torch.float32)
             _, _, sim_score_matrix = self.similarity_function(
-                torch.tensor(queries[:9535], dtype=torch.float32).to(device),
-                torch.tensor(documents[:47675], dtype=torch.float32).to(device),
+                torch.tensor(queries, dtype=torch.float32).to(device),
+                torch.tensor(documents, dtype=torch.float32).to(device),
                 torch.tensor(support_embeddings['train_image'], dtype=torch.float32).to(device),
                 torch.tensor(support_embeddings['train_text'], dtype=torch.float32).to(device),
                 val_labels,
@@ -68,8 +68,8 @@ class ASIFMethod(AbsMethod):
             range_anch = range_anch[-1:]  # run just last anchor to be quick
             val_labels = torch.zeros((1,), dtype=torch.float32)
             _, _, sim_score_matrix = self.similarity_function(
-                torch.tensor(queries[:9535], dtype=torch.float32).to(device),
-                torch.tensor(documents[:47675], dtype=torch.float32).to(device),
+                torch.tensor(queries, dtype=torch.float32).to(device),
+                torch.tensor(documents, dtype=torch.float32).to(device),
                 torch.tensor(support_embeddings['train_text'], dtype=torch.float32).to(device),
                 torch.tensor(support_embeddings['train_image'], dtype=torch.float32).to(device),
                 val_labels,
