@@ -27,8 +27,7 @@ def test_framework():
         for txt_variant in get_text_embedding_model_variant(txt_embedding_model):
             all_txt_embedding_model_name.append(f"{txt_embedding_model}_{txt_variant}")
 
-    print(all_txt_embedding_model_name)
-    print(all_img_embedding_model_name)
+    
     for txt_embedding_model_name in all_txt_embedding_model_name:
        for img_embedding_model_name in all_img_embedding_model_name:
             

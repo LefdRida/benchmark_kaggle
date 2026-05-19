@@ -97,6 +97,8 @@ def effective_rank(eigvals: np.ndarray) -> float:
 
 def run_diagnostics(embeddings_text: np.ndarray,
                     embeddings_image: np.ndarray,
+                    embeddings_text_training: np.ndarray,
+                    embeddings_image_training: np.ndarray,
                     embeddings_text_total: np.ndarray,
                     embeddings_image_total: np.ndarray,
                     k: int = 20
@@ -129,13 +131,18 @@ def run_diagnostics(embeddings_text: np.ndarray,
         torch.tensor(embeddings_text, dtype=torch.float32).to("cuda"),
         torch.tensor(embeddings_image, dtype=torch.float32).to("cuda")
     ).item()
+    cka_score_training = linear_CKA(
+        torch.tensor(embeddings_text_training, dtype=torch.float32).to("cuda"),
+        torch.tensor(embeddings_image_training, dtype=torch.float32).to("cuda")
+    ).item()
     cka_score_total = linear_CKA(
         torch.tensor(embeddings_text_total, dtype=torch.float32).to("cuda"),
         torch.tensor(embeddings_image_total, dtype=torch.float32).to("cuda")
     ).item()
     
     results["cka_score"] = cka_score
-    results["cka_score_training"] = cka_score_total
+    results["cka_score_training"] = cka_score_training
+    results["cka_score_total"] = cka_score_total
     # --- build and center linear kernel matrices ---
     K_t = embeddings_text @ embeddings_text.T             # (k, k)
     K_i = embeddings_image @ embeddings_image.T
