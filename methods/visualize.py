@@ -135,10 +135,10 @@ def run_diagnostics(embeddings_text: np.ndarray,
         torch.tensor(embeddings_text_training, dtype=torch.float32).to("cuda"),
         torch.tensor(embeddings_image_training, dtype=torch.float32).to("cuda")
     ).item()
-    cka_score_total = linear_CKA(
-        torch.tensor(embeddings_text_total, dtype=torch.float32).to("cuda"),
-        torch.tensor(embeddings_image_total, dtype=torch.float32).to("cuda")
-    ).item()
+    cka_score_total = 0 #linear_CKA(
+    #     torch.tensor(embeddings_text_total, dtype=torch.float32).to("cuda"),
+    #     torch.tensor(embeddings_image_total, dtype=torch.float32).to("cuda")
+    # ).item()
     
     results["cka_score"] = cka_score
     results["cka_score_training"] = cka_score_training
