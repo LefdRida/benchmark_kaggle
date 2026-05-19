@@ -670,7 +670,6 @@ class CKAMethod(AbsMethod):
 
 
         all_hits = []
-        print(n_queries)
         for i in tqdm(range(n_queries), desc="[CKAMethod] Evaluating hits"):
             row        = graph[i]
             sorted_idx = np.argsort(-row)[:topk]
@@ -682,7 +681,7 @@ class CKAMethod(AbsMethod):
 
         print(f"[CKAMethod] Done.\n")
 
-        return all_hits, diagnostic_results
+        return all_hits#, diagnostic_results
 
 
 

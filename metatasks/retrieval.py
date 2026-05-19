@@ -189,14 +189,12 @@ class RetrievalTask(AbsTask):
             all_ap      = []
             all_mrr     = []
             all_ndcg    = []
-            print(len(all_hits))
-            print(all_hits[-1])
+            
             for hit in all_hits:
                 hit = np.array(hit)
 
                 recall_k = np.cumsum(hit) / num_gt
                 all_recalls.append(recall_k)
-                print(hit.shape)
                 precision_k = np.cumsum(hit) / (np.arange(len(hit)) + 1)
                 ap = np.sum(precision_k * hit) / num_gt
                 all_ap.append(ap)
