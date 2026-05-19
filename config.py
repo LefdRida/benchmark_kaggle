@@ -104,8 +104,8 @@ config = {
         "generate_embedding": False,
         "metatask": "classification", # "classification" or  "retrieval"
     },
-    "image_embedding_models": ["clip"], #["dinov2", "ijepa", "ibot", "mae", ], #, "aim" "google_vit"
-    "text_embedding_models": ["clip"],#["nv_embed", "gtr_t5", "alibaba_gte_en_v1_5", "baai_bge_en_v1_5", "infloat_e5",  "all_mpnet_base_v2", "sentence_t5"], #,,   "qwen3",
+    "image_embedding_models": ["dinov2", "ijepa", "ibot", "mae" ], #, "aim" "google_vit" "nv_embed", "gtr_t5", "alibaba_gte_en_v1_5", "baai_bge_en_v1_5", 
+    "text_embedding_models": ["infloat_e5",  "all_mpnet_base_v2", "sentence_t5"], #,,   "qwen3",
     "embedding_model": {
         "img_encoder": "dinov2", 
         "text_encoder": "gtr_t5", 

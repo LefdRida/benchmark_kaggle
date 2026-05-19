@@ -618,7 +618,7 @@ class CKAMethod(AbsMethod):
         print(f"[CKAMethod] Computing CKA graph ({n_queries} x {n_documents})...")
         if not dynamic:
             with torch.no_grad():
-                graph = self._vectorized_rbf_cka_graph(
+                graph = self._vectorized_linear_cka_graph(
                     base_source=base_source,
                     base_target=base_target,
                     query_source=restricted_source,
