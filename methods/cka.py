@@ -665,7 +665,7 @@ class CKAMethod(AbsMethod):
 
                     
             
-
+        print(graph.shape)
         graph = graph.detach().cpu().numpy()
 
 
