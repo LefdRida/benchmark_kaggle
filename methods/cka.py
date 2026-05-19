@@ -568,11 +568,13 @@ class CKAMethod(AbsMethod):
             #     seed             = 42,
             # )
             
-            diagnostic_results = None#run_diagnostics(
-            #     embeddings_text = base_source.cpu().numpy(),
-            #     embeddings_image = base_target.cpu().numpy(),
-            #     k = n_clusters
-            # )
+            diagnostic_results = run_diagnostics(
+                embeddings_text = base_source.cpu().numpy(),
+                embeddings_image = base_target.cpu().numpy(),
+                embeddings_text_total = source_total.cpu().numpy(),
+                embeddings_image_total= target_total.cpu().numpy(),
+                k = n_clusters
+            )
 
         n_available = test_target.shape[0]
 
@@ -618,12 +620,12 @@ class CKAMethod(AbsMethod):
         print(f"[CKAMethod] Computing CKA graph ({n_queries} x {n_documents})...")
         if not dynamic:
             with torch.no_grad():
-                graph = self._vectorized_linear_cka_graph(
-                    base_source=base_source,
-                    base_target=base_target,
-                    query_source=restricted_source,
-                    query_target=test_target[:n_queries],
-                )
+                graph = None#self._vectorized_linear_cka_graph(
+                #     base_source=base_source,
+                #     base_target=base_target,
+                #     query_source=restricted_source,
+                #     query_target=test_target[:n_queries],
+                # )
         else:
             diagnostic_results = {}
             graph              = torch.zeros((n_queries, n_documents), device=self.device)
@@ -666,22 +668,22 @@ class CKAMethod(AbsMethod):
                     
             
         
-        graph = graph.detach().cpu().numpy()
+        #graph = graph.detach().cpu().numpy()
 
 
         all_hits = []
-        for i in tqdm(range(n_queries), desc="[CKAMethod] Evaluating hits"):
-            row        = graph[i]
-            sorted_idx = np.argsort(-row)[:topk]
-            hit        = np.zeros(topk)
-            for k, idx in enumerate(sorted_idx):
-                if idx in local_gt_ids[i]:
-                    hit[k] = 1
-            all_hits.append(hit)
+        # for i in tqdm(range(n_queries), desc="[CKAMethod] Evaluating hits"):
+        #     row        = graph[i]
+        #     sorted_idx = np.argsort(-row)[:topk]
+        #     hit        = np.zeros(topk)
+        #     for k, idx in enumerate(sorted_idx):
+        #         if idx in local_gt_ids[i]:
+        #             hit[k] = 1
+        #     all_hits.append(hit)
 
         print(f"[CKAMethod] Done.\n")
 
-        return all_hits#, diagnostic_results
+        return all_hits, diagnostic_results
 
 
 

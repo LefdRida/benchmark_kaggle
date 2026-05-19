@@ -87,7 +87,7 @@ class RetrievalTask(AbsTask):
         # ============================================================
 
         if hasattr(method, 'retrieve'):
-            all_hits = method.retrieve(
+            all_hits, diagnostic_results = method.retrieve(
                 queries_in,
                 gt_ids_in,
                 documents_in,
@@ -213,9 +213,9 @@ class RetrievalTask(AbsTask):
             avg_recall = np.mean(all_recalls, axis=0)
 
             return {
-                "Recall@5":  avg_recall[4] if self.topk >= 5  else None,
-                "Recall@10": avg_recall[9] if self.topk >= 10 else None,
-                "MAP":       float(np.mean(all_ap)),
-                "MRR":       float(np.mean(all_mrr)),
-                "NDCG":      float(np.mean(all_ndcg)),
-            }
+                "Recall@5":  None,#avg_recall[4] if self.topk >= 5  else None,
+                "Recall@10": None,#avg_recall[9] if self.topk >= 10 else None,
+                "MAP":       None,#float(np.mean(all_ap)),
+                "MRR":       None,#float(np.mean(all_mrr)),
+                "NDCG":      None#float(np.mean(all_ndcg)),
+            }, diagnostic_results

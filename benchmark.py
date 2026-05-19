@@ -22,10 +22,10 @@ class MMA_Benchmark:
                 print(exp_name)
                 method = method_class(**self.config[method_name])
                 print(f"Running method: {method.name}")
-                results[exp_name] = task.run(method, support_embeddings=support_embeddings, **kwargs)
+                results[exp_name], diagnostic_results[exp_name] = task.run(method, support_embeddings=support_embeddings, **kwargs)
                 # with open("cka_results_retrieval.json", "w") as f:
                 #     json.dump(results, f)
-        return results
+        return results, diagnostic_results
 
     def add_task(self, task: AbsTask):
         """Add a new task to the benchmark."""
