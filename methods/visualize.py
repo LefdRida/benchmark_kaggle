@@ -126,16 +126,16 @@ def run_diagnostics(embeddings_text: np.ndarray,
  
     #idx = greedy_erank_selection(embeddings_image, k=350)
     cka_score = linear_CKA(
-        torch.tensor(embeddings_text, dtype=torch.float32),
-        torch.tensor(embeddings_image, dtype=torch.float32)
+        torch.tensor(embeddings_text, dtype=torch.float32).to("cuda"),
+        torch.tensor(embeddings_image, dtype=torch.float32).to("cuda")
     ).item()
     cka_score_total = linear_CKA(
-        torch.tensor(embeddings_text_total, dtype=torch.float32),
-        torch.tensor(embeddings_image_total, dtype=torch.float32)
+        torch.tensor(embeddings_text_total, dtype=torch.float32).to("cuda"),
+        torch.tensor(embeddings_image_total, dtype=torch.float32).to("cuda")
     ).item()
     
     results["cka_score"] = cka_score
-    results["cka_score_total"] = cka_score_total
+    results["cka_score_training"] = cka_score_total
     # --- build and center linear kernel matrices ---
     K_t = embeddings_text @ embeddings_text.T             # (k, k)
     K_i = embeddings_image @ embeddings_image.T

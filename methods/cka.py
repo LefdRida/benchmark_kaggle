@@ -571,8 +571,8 @@ class CKAMethod(AbsMethod):
             diagnostic_results = run_diagnostics(
                 embeddings_text = base_source.cpu().numpy(),
                 embeddings_image = base_target.cpu().numpy(),
-                embeddings_text_total = source_total.cpu().numpy(),
-                embeddings_image_total= target_total.cpu().numpy(),
+                embeddings_text_total = train_source.cpu().numpy(),
+                embeddings_image_total= train_target.cpu().numpy(),
                 k = n_clusters
             )
 

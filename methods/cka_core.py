@@ -37,12 +37,12 @@ def kernel_CKA(X, Y, device, sigma=None):
 
     return hsic / (var1 * var2)
 
-def linear_HSIC(X, Y, device="cpu"):
+def linear_HSIC(X, Y, device="cuda"):
     L_X = torch.matmul(X, X.T)
     L_Y = torch.matmul(Y, Y.T)
     return torch.sum(centering(L_X, device) * centering(L_Y, device))
 
-def linear_CKA(X, Y, device="cpu"):
+def linear_CKA(X, Y, device="cuda"):
     hsic = linear_HSIC(X, Y, device)
     var1 = torch.sqrt(linear_HSIC(X, X, device))
     var2 = torch.sqrt(linear_HSIC(Y, Y, device))
