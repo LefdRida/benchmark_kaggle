@@ -195,7 +195,7 @@ class RetrievalTask(AbsTask):
 
                 recall_k = np.cumsum(hit) / num_gt
                 all_recalls.append(recall_k)
-
+                print(hit.shape)
                 precision_k = np.cumsum(hit) / (np.arange(len(hit)) + 1)
                 ap = np.sum(precision_k * hit) / num_gt
                 all_ap.append(ap)
