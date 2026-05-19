@@ -189,7 +189,7 @@ class RetrievalTask(AbsTask):
             all_ap      = []
             all_mrr     = []
             all_ndcg    = []
-
+            print(len(all_hits))
             for hit in all_hits:
                 hit = np.array(hit)
 

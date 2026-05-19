@@ -665,12 +665,12 @@ class CKAMethod(AbsMethod):
 
                     
             
-        print(graph.shape)
+        
         graph = graph.detach().cpu().numpy()
 
 
         all_hits = []
-
+        print(n_queries)
         for i in tqdm(range(n_queries), desc="[CKAMethod] Evaluating hits"):
             row        = graph[i]
             sorted_idx = np.argsort(-row)[:topk]
