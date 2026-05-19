@@ -78,6 +78,126 @@ class CKAMethod(AbsMethod):
     def align(self, image_embeddings, text_embeddings, **kwargs):
         return image_embeddings, text_embeddings
 
+    def _vectorized_rbf_cka_graph(
+        self,
+        base_source: torch.Tensor,    # (B, d1)
+        base_target: torch.Tensor,    # (B, d2)
+        query_source: torch.Tensor,   # (M, d1)
+        query_target: torch.Tensor,   # (N, d2)
+        sigma_source: float = None,
+        sigma_target: float = None,
+    ) -> torch.Tensor:
+
+        B = base_source.shape[0]
+        N = query_target.shape[0]
+        M = query_source.shape[0]
+        n = B + 1
+        device = self.device
+
+        # ── RBF kernels for SOURCE space ──────────────────────────
+        base_src_sq  = (base_source ** 2).sum(1)                        # (B,)
+        query_src_sq = (query_source ** 2).sum(1)                       # (M,)
+
+        K_bb_dist = (base_src_sq.unsqueeze(1) + base_src_sq.unsqueeze(0)
+                    - 2.0 * base_source @ base_source.T).clamp_min_(0.0)
+
+        if sigma_source is None:
+            upper = K_bb_dist.triu(diagonal=1).flatten()
+            sigma_source = torch.sqrt(torch.median(upper[upper > 0]))
+
+        inv2s_src = -1.0 / (2.0 * sigma_source ** 2)
+
+        K_bb = torch.exp(K_bb_dist * inv2s_src)                         # (B, B)
+
+        K_bq_dist = (base_src_sq.unsqueeze(1) + query_src_sq.unsqueeze(0)
+                    - 2.0 * base_source @ query_source.T).clamp_min_(0.0)
+        K_bq = torch.exp(K_bq_dist * inv2s_src)                        # (B, M)
+
+        K_qq = torch.ones(M, device=device)                             # exp(0) = 1
+
+        # ── RBF kernels for TARGET space ──────────────────────────
+        base_tgt_sq  = (base_target ** 2).sum(1)                        # (B,)
+        query_tgt_sq = (query_target ** 2).sum(1)                       # (N,)
+
+        L_bb_dist = (base_tgt_sq.unsqueeze(1) + base_tgt_sq.unsqueeze(0)
+                    - 2.0 * base_target @ base_target.T).clamp_min_(0.0)
+
+        if sigma_target is None:
+            upper = L_bb_dist.triu(diagonal=1).flatten()
+            sigma_target = torch.sqrt(torch.median(upper[upper > 0]))
+
+        inv2s_tgt = -1.0 / (2.0 * sigma_target ** 2)
+
+        L_bb = torch.exp(L_bb_dist * inv2s_tgt)                        # (B, B)
+
+        L_bq_dist = (base_tgt_sq.unsqueeze(1) + query_tgt_sq.unsqueeze(0)
+                    - 2.0 * base_target @ query_target.T).clamp_min_(0.0)
+        L_bq = torch.exp(L_bq_dist * inv2s_tgt)                        # (B, N)
+
+        L_qq = torch.ones(N, device=device)                             # exp(0) = 1
+
+        # ── Base-only statistics (computed once) ──────────────────
+        K_bb_rowsum = K_bb.sum(1)
+        K_bb_total  = K_bb_rowsum.sum()
+        L_bb_rowsum = L_bb.sum(1)
+        L_bb_total  = L_bb_rowsum.sum()
+
+        KL_bb = (K_bb * L_bb).sum()
+        KK_bb = (K_bb * K_bb).sum()
+        LL_bb = (L_bb * L_bb).sum()
+
+        # ── Batched graph fill (identical structure to linear) ────
+        graph      = torch.zeros((N, M), device=device)
+        batch_size = 50
+
+        for i_start in tqdm(range(0, N, batch_size), desc="[CKAMethod] RBF-CKA batches"):
+            i_end = min(i_start + batch_size, N)
+
+            l_bi = L_bq[:, i_start:i_end]                              # (B, bs)
+            l_ii = L_qq[i_start:i_end]                                  # (bs,)  ≡ 1
+
+            L_rowsum_base = L_bb_rowsum.unsqueeze(1) + l_bi
+            L_rowsum_last = l_bi.sum(0) + l_ii
+            L_total       = L_bb_total + 2.0 * l_bi.sum(0) + l_ii
+
+            LL_bq  = torch.einsum('bn,bn->n', l_bi, l_bi)
+            LL_qq  = l_ii ** 2
+            LL_sum = LL_bb + 2.0 * LL_bq + LL_qq
+            LL_rs  = (L_rowsum_base ** 2).sum(0) + L_rowsum_last ** 2
+            var_L  = LL_sum - (2.0/n)*LL_rs + (1.0/n**2)*(L_total**2)
+
+            for j_start in range(0, M, batch_size):
+                j_end = min(j_start + batch_size, M)
+
+                k_bj = K_bq[:, j_start:j_end]                          # (B, ms)
+                k_jj = K_qq[j_start:j_end]                              # (ms,)  ≡ 1
+
+                K_rowsum_base = K_bb_rowsum.unsqueeze(1) + k_bj
+                K_rowsum_last = k_bj.sum(0) + k_jj
+                K_total       = K_bb_total + 2.0 * k_bj.sum(0) + k_jj
+
+                KL_bq    = torch.einsum('bm,bn->mn', k_bj, l_bi)
+                KL_qq    = k_jj.unsqueeze(1) * l_ii.unsqueeze(0)
+                KL_sum   = KL_bb + 2.0 * KL_bq + KL_qq
+
+                RS_base  = torch.einsum('bm,bn->mn', K_rowsum_base, L_rowsum_base)
+                RS_last  = K_rowsum_last.unsqueeze(1) * L_rowsum_last.unsqueeze(0)
+                RS       = RS_base + RS_last
+
+                KL_total = K_total.unsqueeze(1) * L_total.unsqueeze(0)
+                hsic     = KL_sum - (2.0/n)*RS + (1.0/n**2)*KL_total
+
+                KK_bq  = torch.einsum('bm,bm->m', k_bj, k_bj)
+                KK_qq  = k_jj ** 2
+                KK_sum = KK_bb + 2.0 * KK_bq + KK_qq
+                KK_rs  = (K_rowsum_base ** 2).sum(0) + K_rowsum_last ** 2
+                var_K  = KK_sum - (2.0/n)*KK_rs + (1.0/n**2)*(K_total**2)
+
+                denom  = torch.sqrt(var_K.unsqueeze(1) * var_L.unsqueeze(0)) + 1e-8
+                graph[i_start:i_end, j_start:j_end] = (hsic / denom).T
+
+        return graph
+    
     def _vectorized_linear_cka_graph(
         self,
         base_source: torch.Tensor,   
@@ -498,7 +618,7 @@ class CKAMethod(AbsMethod):
         print(f"[CKAMethod] Computing CKA graph ({n_queries} x {n_documents})...")
         if not dynamic:
             with torch.no_grad():
-                graph = self._vectorized_linear_cka_graph(
+                graph = self._vectorized_rbf_cka_graph(
                     base_source=base_source,
                     base_target=base_target,
                     query_source=restricted_source,
