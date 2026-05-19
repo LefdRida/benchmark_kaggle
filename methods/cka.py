@@ -84,8 +84,8 @@ class CKAMethod(AbsMethod):
         base_target: torch.Tensor,    # (B, d2)
         query_source: torch.Tensor,   # (M, d1)
         query_target: torch.Tensor,   # (N, d2)
-        sigma_source: float = None,
-        sigma_target: float = None,
+        sigma_source: float = 0.5,
+        sigma_target: float = 0.5,
     ) -> torch.Tensor:
 
         B = base_source.shape[0]
