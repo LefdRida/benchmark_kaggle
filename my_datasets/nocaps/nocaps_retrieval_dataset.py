@@ -136,17 +136,17 @@ class NoCapsRetrievalDataset(NoCaps, EmbeddingDataset):
             train_image_embeddings = np.concatenate(image_emb, axis=0)
             train_text_embeddings = np.concatenate(text_emb, axis=0)
 
-            for idx in range(self.image_embeddings.shape[0]):
-                image_ids = self.img_caption_mapping[idx]["image_id"]
-                caption_ids = self.img_caption_mapping[idx]["annotations_ids"]
-                caption_emb = self.text_embeddings[caption_ids].reshape(len(caption_ids), -1)
-                all_text_embed.append(caption_emb)
-                all_image_embed.append(
-                        np.repeat(self.image_embeddings[image_ids].reshape(1, -1), len(caption_ids), axis=0)
-                )
+            # for idx in range(self.image_embeddings.shape[0]):
+            #     image_ids = self.img_caption_mapping[idx]["image_id"]
+            #     caption_ids = self.img_caption_mapping[idx]["annotations_ids"]
+            #     caption_emb = self.text_embeddings[caption_ids].reshape(len(caption_ids), -1)
+            #     all_text_embed.append(caption_emb)
+            #     all_image_embed.append(
+            #             np.repeat(self.image_embeddings[image_ids].reshape(1, -1), len(caption_ids), axis=0)
+            #     )
 
-            all_image_embed = np.concatenate(all_image_embed, axis=0)
-            all_text_embed = np.concatenate(all_text_embed, axis=0)
+            # all_image_embed = np.concatenate(all_image_embed, axis=0)
+            # all_text_embed = np.concatenate(all_text_embed, axis=0)
                 
         else:
             raise ValueError("Please set split to 'train' or get the train/test split index first.")
