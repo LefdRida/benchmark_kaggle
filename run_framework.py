@@ -18,7 +18,7 @@ def test_framework():
     diagnostic_logs = {}
     #1. Run Embeddings
     all_img_embedding_model_name = []
-    for img_embedding_model in config.image_embedding_models:ﬂ
+    for img_embedding_model in config.image_embedding_models:
         for img_variant in get_image_embedding_model_variant(img_embedding_model):
             all_img_embedding_model_name.append(f"{img_embedding_model}_{img_variant}")
 
