@@ -13,12 +13,15 @@ config = {
         'query_samples': "full", 
         'base_mode':"full", # "clustering" or "random" or "full"
     },
+    "knn":{
+        "num_classes": 1000,
+        "k": 30,
+        "T": 0.07
+    },
     "cka":{
         'base_samples': 1000, 
         'query_samples': "full", 
         'base_mode':"clustering", # "clustering" or "random" or "full"
-        
-        
     },
     "retrieval":{
         "topk": 20,
