@@ -568,15 +568,15 @@ class CKAMethod(AbsMethod):
             #     seed             = 42,
             # )
             
-            diagnostic_results = run_diagnostics(
-                embeddings_text = base_source.cpu().numpy(),
-                embeddings_image = base_target.cpu().numpy(),
-                embeddings_text_training = train_source.cpu().numpy(),
-                embeddings_image_training = train_target.cpu().numpy(),
-                embeddings_text_total = support_embeddings["all_text"],
-                embeddings_image_total= support_embeddings["all_image"],
-                k = n_clusters
-            )
+            #diagnostic_results = run_diagnostics(
+            #    embeddings_text = base_source.cpu().numpy(),
+            #    embeddings_image = base_target.cpu().numpy(),
+            #    embeddings_text_training = train_source.cpu().numpy(),
+            #    embeddings_image_training = train_target.cpu().numpy(),
+            #    embeddings_text_total = support_embeddings["all_text"],
+            #    embeddings_image_total= support_embeddings["all_image"],
+            #    k = n_clusters
+            #)
 
         n_available = test_target.shape[0]
 
@@ -685,7 +685,7 @@ class CKAMethod(AbsMethod):
 
         print(f"[CKAMethod] Done.\n")
 
-        return all_hits, diagnostic_results
+        return all_hits, None
 
 
 
