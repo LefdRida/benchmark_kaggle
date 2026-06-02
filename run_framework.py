@@ -85,7 +85,7 @@ def test_framework():
                 #rich.print(f"Finished running {img_embedding_model_name} with {txt_embedding_model_name} and n_clusters={n}")
                 rich.print(f"Results:", results)
                 #rich.print(f"Diagnostic Results:", diagnostic_results)
-                results_logs[f"results_{img_embedding_model_name}_{txt_embedding_model_name}_{n}"] = results
+                results_logs[f"results_{img_embedding_model_name}"] = results
                 #diagnostic_logs[f"diagnostic_of_repeat_{n}"] = diagnostic_results
                 #with open("cka_clustering_retrieval.json", "w") as f:
                 #    json.dump(results_logs, f)
