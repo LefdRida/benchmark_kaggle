@@ -1,6 +1,6 @@
 config = {
     "tasks": ["nocaps"], # dataset_name
-    "methods": ["asif"],  # Method to use: "asif", "csa", or "cka"
+    "methods": ["cka"],  # Method to use: "asif", "csa", or "cka"
     "csa":{
         "sim_dim": 700,
     },

@@ -87,7 +87,7 @@ def test_framework():
                     #rich.print(f"Diagnostic Results:", diagnostic_results)
                     results_logs[f"results_{img_embedding_model_name}_{txt_embedding_model_name}"] = results
                     #diagnostic_logs[f"diagnostic_of_repeat_{n}"] = diagnostic_results
-                    with open("asif_results.json", "w") as f:
+                    with open("cka_results.json", "w") as f:
                        json.dump(results_logs, f)
                     
                     #with open("nocaps_diagnosti.json", "w") as f:
