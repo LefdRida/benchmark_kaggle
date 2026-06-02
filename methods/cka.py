@@ -622,12 +622,12 @@ class CKAMethod(AbsMethod):
         print(f"[CKAMethod] Computing CKA graph ({n_queries} x {n_documents})...")
         if not dynamic:
             with torch.no_grad():
-                graph = None#self._vectorized_linear_cka_graph(
-                #     base_source=base_source,
-                #     base_target=base_target,
-                #     query_source=restricted_source,
-                #     query_target=test_target[:n_queries],
-                # )
+                graph = self._vectorized_linear_cka_graph(
+                    base_source=base_source,
+                    base_target=base_target,
+                    query_source=restricted_source,
+                    query_target=test_target[:n_queries],
+                )
         else:
             diagnostic_results = {}
             graph              = torch.zeros((n_queries, n_documents), device=self.device)
@@ -670,18 +670,18 @@ class CKAMethod(AbsMethod):
                     
             
         
-        #graph = graph.detach().cpu().numpy()
+        graph = graph.detach().cpu().numpy()
 
 
         all_hits = []
-        # for i in tqdm(range(n_queries), desc="[CKAMethod] Evaluating hits"):
-        #     row        = graph[i]
-        #     sorted_idx = np.argsort(-row)[:topk]
-        #     hit        = np.zeros(topk)
-        #     for k, idx in enumerate(sorted_idx):
-        #         if idx in local_gt_ids[i]:
-        #             hit[k] = 1
-        #     all_hits.append(hit)
+        for i in tqdm(range(n_queries), desc="[CKAMethod] Evaluating hits"):
+            row        = graph[i]
+            sorted_idx = np.argsort(-row)[:topk]
+            hit        = np.zeros(topk)
+            for k, idx in enumerate(sorted_idx):
+                if idx in local_gt_ids[i]:
+                    hit[k] = 1
+            all_hits.append(hit)
 
         print(f"[CKAMethod] Done.\n")
 
