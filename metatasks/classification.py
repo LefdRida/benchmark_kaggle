@@ -2,7 +2,7 @@ import numpy as np
 from sklearn import metrics
 from typing import Any, Dict, List
 from base.base import AbsTask, AbsModel, AbsMethod
-
+import torch
 class ClassificationTask(AbsTask):
     """Task for zero-shot classification evaluation."""
     
@@ -54,9 +54,13 @@ class ClassificationTask(AbsTask):
             acc /= len(predictions)
             results = {"accuracy": acc}
         else:
-            
-            accuracy = metrics.accuracy_score(self.ground_truth, predictions)
-            results = {"accuracy": accuracy}
-        return results
+
+            targets = torch.Tensor(self.ground_truth).to(predictions.device)
+            correct = predictions.eq(targets.data.view(-1, 1))
+            top1 = correct.narrow(1, 0, 1).sum().item() / len(predictions)
+
+            #accuracy = metrics.accuracy_score(self.ground_truth, predictions)
+            #results = {"accuracy": accuracy}
+        return top1
     
     
