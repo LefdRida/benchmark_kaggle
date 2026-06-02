@@ -568,7 +568,7 @@ class CKAMethod(AbsMethod):
             #     seed             = 42,
             # )
             
-            #diagnostic_results = run_diagnostics(
+            diagnostic_results = None#run_diagnostics(
             #    embeddings_text = base_source.cpu().numpy(),
             #    embeddings_image = base_target.cpu().numpy(),
             #    embeddings_text_training = train_source.cpu().numpy(),
