@@ -96,7 +96,7 @@ class ASIFMethod(AbsMethod):
                 hit[jj] = 1 if top_idx in gt_query_ids else 0        
             self.all_hit.append(hit)
             self.sim_scores.append(sim_score)
-        return self.all_hit
+        return self.all_hit, None
     
     def classify(
         self, 

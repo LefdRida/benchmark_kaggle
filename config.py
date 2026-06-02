@@ -1,6 +1,6 @@
 config = {
-    "tasks": ["imagenet1k"], # dataset_name
-    "methods": ["knn"],  # Method to use: "asif", "csa", or "cka"
+    "tasks": ["nocaps"], # dataset_name
+    "methods": ["asif"],  # Method to use: "asif", "csa", or "cka"
     "csa":{
         "sim_dim": 700,
     },
@@ -33,7 +33,7 @@ config = {
         'translate': False,
         'translation_std': 0.01,
         'translation_mean': 0.0,
-        'experiment_name': "cka_retrieval",
+        'experiment_name': "asif_retrieval",
     },
     "classification":{
     },
