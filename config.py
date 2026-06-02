@@ -37,11 +37,11 @@ config = {
     "support_embeddings": None,
 
     "imagenet1k": {
-        "root": "/home/rida.lefdali/work/dataset/imagenet1k/val",
-        "loc_val_solution": "/home/rida.lefdali/work/dataset/imagenet1k/LOC_val_solution.csv",
-        "loc_synset_mapping": "/home/rida.lefdali/work/dataset/imagenet1k/LOC_synset_mapping.txt",
+        "root": "/kaggle/input/datasets/odddatascience/imagenet1k",
+        "loc_val_solution": "/kaggle/input/datasets/odddatascience/imagenet1k/LOC_val_solution.csv",
+        "loc_synset_mapping": "/kaggle/input/datasets/odddatascience/imagenet1k/LOC_synset_mapping.txt",
         "hf_img_embedding_name": "ImageNet_img_embed_dinov2-giant.pkl", 
-        "hf_text_embedding_name": "ImageNet_text_embed_all_mpnet_base_v2_all-mpnet-base-v2.pkl", 
+        "hf_text_embedding_name": "imagenet1k_val_gtr_t5_gtr-t5-base_text_embeddings.pkl", 
         "hf_repo_id": "ridalefdali/imagenet1k_classification_embeddings", 
         "train_test_ratio": 0.7,
         "seed": 42,
