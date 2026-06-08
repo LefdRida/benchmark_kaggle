@@ -48,13 +48,13 @@ def test_framework():
 
                 OmegaConf.update(
                     config, 
-                    "nocaps.hf_img_embedding_name", 
-                    f"nocaps_val_{img_embedding_model_name}_image_embeddings.pkl"
+                    "cifar100.hf_img_embedding_name", 
+                    f"cifar100_all_{img_embedding_model_name}_image_embeddings.pkl"
                     )
                 OmegaConf.update(
                     config, 
-                    "nocaps.hf_text_embedding_name", 
-                    f"nocaps_val_{txt_embedding_model_name}_text_embeddings.pkl"
+                    "cifar100.hf_text_embedding_name", 
+                    f"cifar100_all_{txt_embedding_model_name}_text_embeddings.pkl"
                     )
                     
                 for n in n_clusters:
@@ -81,13 +81,13 @@ def test_framework():
                     print("Benchmark created")
                     # 5. Run Benchmark
                     print("Running Benchmark")
-                    results, diagnostic_results = benchmark.run(model=None, support_embeddings=support_embeddings)
+                    results = benchmark.run(model=None, support_embeddings=support_embeddings)
                     #rich.print(f"Finished running {img_embedding_model_name} with {txt_embedding_model_name} and n_clusters={n}")
                     rich.print(f"Results:", results)
                     #rich.print(f"Diagnostic Results:", diagnostic_results)
                     results_logs[f"results_{img_embedding_model_name}_{txt_embedding_model_name}"] = results
                     #diagnostic_logs[f"diagnostic_of_repeat_{n}"] = diagnostic_results
-                    with open("cka_results.json", "w") as f:
+                    with open("cka_cifar100_results.json", "w") as f:
                        json.dump(results_logs, f)
                     
                     #with open("nocaps_diagnosti.json", "w") as f:

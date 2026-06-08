@@ -53,6 +53,19 @@ config = {
         "generate_embedding": False,
         "metatask": "classification", # only "classification"
     },
+    "cifar100": {
+        "csv_data_path": "/kaggle/input/datasets/odddatascience/cifar100/metadata.csv",
+        "hf_img_embedding_name": "cifar100_dinov2_dinov2-giant_image_embeddings.pkl", 
+        "hf_text_embedding_name": "cifar100_gtr_t5_gtr-t5-large_text_embeddings.pkl", 
+        "hf_repo_id": "ridalefdali/cifar100_classification_embeddings", #"ridalefdali/mscoco_classification_embeddings"
+        "train_test_ratio": 0.7,
+        "seed": 42,
+        "split": "large",
+        "original_ds_split": "all",
+        "generate_embedding": False,
+        "metatask": "classification", # "classification" or  "retrieval"
+        "num_classes": 100,
+    },
     "nocaps": {
         "dataset_path": "/kaggle/working/",
         "hf_img_embedding_name": "nocaps_val_dinov2_dinov2-giant_image_embeddings.pkl", 
