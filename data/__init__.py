@@ -25,6 +25,10 @@ from my_datasets.places365.places365_zeroshot_classification import (
 from my_datasets.nocaps.nocaps_retrieval_dataset import (
     NoCapsRetrievalDataset,
 )
+
+from my_datasets.cifar100.cifar100_zeroshot_classif_dataset import (
+    Cifar100ZeroshotClassificationDataset
+)
 logger = logging.getLogger(__name__)
 
 # Registry dictionary mapping names to classes
@@ -34,7 +38,7 @@ _DATASET_REGISTRY: Dict[str, Type[DatasetBase]] = {
     "imagenet1k-classification": Imagenet1kZeroshotClassificationDataset,
     "mscoco-classification": MScocoMultiLabelClassificationDataset,
     "places365-classification": Places365ZeroshotClassificationDataset,
-
+    "cifar100-classification": Cifar100ZeroshotClassificationDataset,
     # Retrieval Datasets
     "flickr30k-retrieval": Flickr30kRetrievalDataset,
     "mscoco-retrieval": MScocoRetrievalDataset,
@@ -46,6 +50,7 @@ _DATASET_REGISTRY: Dict[str, Type[DatasetBase]] = {
     "mscoco-classification-embedding": MScocoMultiLabelClassificationDataset,
     "places365-classification-embedding": Places365ZeroshotClassificationDataset,
     "nocaps-retrieval-embedding": NoCapsRetrievalDataset,
+    "cifar100-classification-embedding": Cifar100ZeroshotClassificationDataset,
 }
 
 def get_dataset_class(name: str) -> Type[DatasetBase]:
