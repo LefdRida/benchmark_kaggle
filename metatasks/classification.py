@@ -55,12 +55,12 @@ class ClassificationTask(AbsTask):
             results = {"accuracy": acc}
         else:
 
-            targets = torch.Tensor(self.ground_truth).to(predictions.device)
-            correct = predictions.eq(targets.data.view(-1, 1))
-            top1 = correct.narrow(1, 0, 1).sum().item() / len(predictions)
+            # targets = torch.Tensor(self.ground_truth).to(predictions.device)
+            # correct = predictions.eq(targets.data.view(-1, 1))
+            # top1 = correct.narrow(1, 0, 1).sum().item() / len(predictions)
 
-            #accuracy = metrics.accuracy_score(self.ground_truth, predictions)
-            #results = {"accuracy": accuracy}
-        return top1
+            accuracy = metrics.accuracy_score(self.ground_truth, predictions)
+            results = {"accuracy": accuracy}
+        return accuracy
     
     
