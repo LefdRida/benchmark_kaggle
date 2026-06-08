@@ -118,7 +118,7 @@ class Cifar100ZeroshotClassificationDataset(Cifar100, EmbeddingDataset):
     
     def set_labels_emb(self) -> None:
         """Get the text embeddings for all possible labels."""
-        if self.text_embeddings.shape[0] == len(self.clsidx_to_labels):
+        if self.text_embeddings.shape[0] == len(np.unique(self.labels)):
             labels_emb = self.text_embeddings
         else:
             label_emb = []
