@@ -1,5 +1,5 @@
 config = {
-    "tasks": ["nocaps"], # dataset_name
+    "tasks": ["cifar100"], # dataset_name
     "methods": ["cka"],  # Method to use: "asif", "csa", or "cka"
     "csa":{
         "sim_dim": 700,
