@@ -332,14 +332,14 @@ class CKAMethod(AbsMethod):
                     test_target
                 )
         
-        run_visualization(
-            image_embeddings = train_target,
-            text_embeddings  = train_source,
-            n_samples        = train_target.shape[0],
-            n_clusters       = 20,
-            save_prefix       = f"{experiment_name}",
-            perplexity       = 30,
-        )
+        # run_visualization(
+        #     image_embeddings = train_target,
+        #     text_embeddings  = train_source,
+        #     n_samples        = train_target.shape[0],
+        #     n_clusters       = 20,
+        #     save_prefix       = f"{experiment_name}",
+        #     perplexity       = 30,
+        # )
             
         train_source = torch.tensor(
             train_source,
