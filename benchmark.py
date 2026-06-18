@@ -23,6 +23,7 @@ class MMA_Benchmark:
                 method = method_class(**self.config[method_name])
                 print(f"Running method: {method.name}")
                 results[exp_name] = task.run(method, support_embeddings=support_embeddings, **kwargs)
+                print(results)
                 # with open("cka_results_retrieval.json", "w") as f:
                 #     json.dump(results, f)
         return results

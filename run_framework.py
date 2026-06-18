@@ -42,19 +42,21 @@ def test_framework():
                     original_ds_split = "_val_"
                 elif task == "places365":
                     original_ds_split = "_train_"
+                elif task =="cifar100":
+                    original_ds_split = "_all_"
                 else:
                     original_ds_split = "_"
                 print(f"Running {task} with {original_ds_split}")
 
                 OmegaConf.update(
                     config, 
-                    "cifar100.hf_img_embedding_name", 
-                    f"cifar100_all_{img_embedding_model_name}_image_embeddings.pkl"
+                    f"{task}.hf_img_embedding_name", 
+                    f"{task}{original_ds_split}{img_embedding_model_name}_image_embeddings.pkl"
                     )
                 OmegaConf.update(
                     config, 
-                    "cifar100.hf_text_embedding_name", 
-                    f"cifar100_all_{txt_embedding_model_name}_text_embeddings.pkl"
+                    f"{task}.hf_text_embedding_name", 
+                    f"{task}{original_ds_split}{img_embedding_model_name}_text_embeddings.pkl"
                     )
                     
                 for n in n_clusters:
