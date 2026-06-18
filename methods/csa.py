@@ -25,7 +25,7 @@ class CSAMethod(AbsMethod):
                 support_embeddings['train_image'], 
                 support_embeddings['train_text']
             )
-            self.fitted = True
+            self.fitted = False
 
         # Transform based on mode
         # Zero mean using training mean
