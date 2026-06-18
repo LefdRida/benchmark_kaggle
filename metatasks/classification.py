@@ -58,7 +58,8 @@ class ClassificationTask(AbsTask):
             # targets = torch.Tensor(self.ground_truth).to(predictions.device)
             # correct = predictions.eq(targets.data.view(-1, 1))
             # top1 = correct.narrow(1, 0, 1).sum().item() / len(predictions)
-
+            print(len(self.ground_truth))
+            print(len(predictions))
             accuracy = metrics.accuracy_score(self.ground_truth, predictions)
             results = {"accuracy": accuracy}
         return accuracy
