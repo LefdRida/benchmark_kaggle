@@ -45,8 +45,8 @@ class NormalizedCCA:
             corr_coeff: the correlation coefficient. shape: (dim,)
         """
         # Check the shape of the training data
-        #traindata1 = traindata1.astype(np.float32)
-        #traindata2 = traindata2.astype(np.float32)
+        traindata1 = traindata1.astype(np.float32)
+        traindata2 = traindata2.astype(np.float32)
         # zero mean data
         traindata1, traindata1_mean = origin_centered(traindata1)
         traindata2, traindata2_mean = origin_centered(traindata2)
