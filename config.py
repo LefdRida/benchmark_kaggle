@@ -1,6 +1,6 @@
 config = {
-    "tasks": ["cifar100"], # dataset_name
-    "methods": ["cka"],  # Method to use: "asif", "csa", or "cka"
+    "tasks": ["imagenet1k", "places365", "cifar100"], # dataset_name
+    "methods": ["asif", "csa", "cka"],  # Method to use: "asif", "csa", or "cka"
     "csa":{
         "sim_dim": 700,
     },
@@ -21,7 +21,7 @@ config = {
     "cka":{
         'base_samples': 1000, 
         'query_samples': "full", 
-        'base_mode':"clustering", # "clustering" or "random" or "full"
+        'base_mode':"full", # "clustering" or "random" or "full"
     },
     "retrieval":{
         "topk": 20,
@@ -107,9 +107,9 @@ config = {
         "metatask": "classification", # "classification" or  "retrieval"
     },
     "places365": {
-        "root": "/home/rida.lefdali/work/dataset/places365_standard/train",
-        "filelist_places": "/home/rida.lefdali/work/dataset/places365/places365_train_standard.txt",
-        "categories_places": "/home/rida.lefdali/work/dataset/places365/categories_places365.txt",
+        "root": "/kaggle/input/datasets/odddatascience/places365",
+        "filelist_places": "/kaggle/input/datasets/odddatascience/places365/places365_train_standard.txt",
+        "categories_places": "/kaggle/input/datasets/odddatascience/places365/categories_places365.txt",
         "hf_img_embedding_name": "places365_dinov2_dinov2-giant_image_embeddings.pkl", 
         "hf_text_embedding_name": "places365_gtr_t5_gtr-t5-large_text_embeddings.pkl", 
         "hf_repo_id": "ridalefdali/places365_classification_embeddings", #"ridalefdali/mscoco_classification_embeddings"
@@ -120,8 +120,8 @@ config = {
         "generate_embedding": False,
         "metatask": "classification", # "classification" or  "retrieval"
     },
-    "image_embedding_models": ["dinov2", "ijepa", "ibot", "mae" ], #, "aim" "google_vit" 
-    "text_embedding_models": ["nv_embed", "gtr_t5", "alibaba_gte_en_v1_5", "baai_bge_en_v1_5", "infloat_e5",  "all_mpnet_base_v2", "sentence_t5"], #,,   "qwen3",
+    "image_embedding_models": ["dinov2"],# "ijepa", "ibot", "mae" ], #, "aim" "google_vit" 
+    "text_embedding_models": ["sentence_t5"], #"nv_embed", "gtr_t5", "alibaba_gte_en_v1_5", "baai_bge_en_v1_5", "infloat_e5",  "all_mpnet_base_v2", "sentence_t5"], #,,   "qwen3",
     "embedding_model": {
         "img_encoder": "dinov2", 
         "text_encoder": "gtr_t5", 

@@ -33,7 +33,7 @@ _TEXT_EMBEDDING_MODEL_REGISTRY: Dict[str, callable] = {
 _IMAGE_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
     # Image Embedding Models
     #"dinov3": ['dinov3-vits16-pretrain-lvd1689m', 'dinov3-vitb16-pretrain-lvd1689m','dinov3-vitl16-pretrain-lvd1689m', 'dinov3-vith16plus-pretrain-lvd1689m', 'dinov3-vit7b16-pretrain-lvd1689m'],
-    "dinov2": ['dinov2-giant', 'dinov2-base', 'dinov2-small', 'dinov2-large'],
+    "dinov2": ["'dinov2-large"], #['dinov2-giant', 'dinov2-base', 'dinov2-small', ],
     "ijepa": ['ijepa_vith14_22k', 'ijepa_vitg16_22k'],
     "ibot": ['ibot-base', 'ibot-large'],
     #"aim": ['aim-600M', 'aim-1B', 'aim-3B'],
@@ -44,7 +44,7 @@ _IMAGE_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
 
 _TEXT_EMBEDDING_MODEL_VARIANTS_REGISTRY: Dict[str, callable] = {
     # Text Embedding Models
-    "sentence_t5": ['sentence-t5-base', 'sentence-t5-large', 'sentence-t5-xl', 'sentence-t5-xxl'],
+    "sentence_t5": ['sentence-t5-base'],#, 'sentence-t5-large', 'sentence-t5-xl', 'sentence-t5-xxl'],
     "gtr_t5": ['gtr-t5-large', 'gtr-t5-base', 'gtr-t5-large', 'gtr-t5-xl', 'gtr-t5-xxl'],
     "all_mpnet_base_v2": ['all-mpnet-base-v2'],
     "alibaba_gte_en_v1_5": ['gte-base-en-v1.5', 'gte-large-en-v1.5'],
