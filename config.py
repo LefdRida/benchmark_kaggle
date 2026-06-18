@@ -1,5 +1,5 @@
 config = {
-    "tasks": ["imagenet1k", "places365", "cifar100"], # dataset_name
+    "tasks": ["imagenet1k"], # dataset_name
     "methods": ["asif", "csa"],  # Method to use: "asif", "csa", or "cka"
     "csa":{
         "sim_dim": 700,
@@ -120,8 +120,8 @@ config = {
         "generate_embedding": False,
         "metatask": "classification", # "classification" or  "retrieval"
     },
-    "image_embedding_models": ["dinov2"],# "ijepa", "ibot", "mae" ], #, "aim" "google_vit" 
-    "text_embedding_models": ["sentence_t5"], #"nv_embed", "gtr_t5", "alibaba_gte_en_v1_5", "baai_bge_en_v1_5", "infloat_e5",  "all_mpnet_base_v2", "sentence_t5"], #,,   "qwen3",
+    "image_embedding_models": ["dinov3"],# "ijepa", "ibot", "mae" ], #, "aim" "google_vit" 
+    "text_embedding_models": ["nv_embed"], #"nv_embed", "gtr_t5", "alibaba_gte_en_v1_5", "baai_bge_en_v1_5", "infloat_e5",  "all_mpnet_base_v2", "sentence_t5"], #,,   "qwen3",
     "embedding_model": {
         "img_encoder": "dinov2", 
         "text_encoder": "gtr_t5", 
