@@ -56,7 +56,7 @@ def test_framework():
                 OmegaConf.update(
                     config, 
                     f"{task}.hf_text_embedding_name", 
-                    f"{task}{original_ds_split}{img_embedding_model_name}_text_embeddings.pkl"
+                    f"{task}{original_ds_split}{txt_embedding_model_name}_text_embeddings.pkl"
                     )
                     
                 for n in n_clusters:
